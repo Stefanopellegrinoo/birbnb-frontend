@@ -70,26 +70,24 @@ export default function Header() {
         hiddenFrom="sm"
         zIndex={1000000}
         >
-        <ScrollArea h="calc(100vh - 80px" mx="-md">
-            <Divider my="sm" />
-            <Link href="/"  className={classes.link}>
-                Home
-            </Link>
-            <Link href="/alojamientos" className={classes.link}>
-                Alojamientos
-            </Link>
-            <Divider my="sm" />
-
-            <Divider my="sm" />
-            <Group justify="center" grow pb="xl" px="md">
-            <Link href="/auth/login" className="navbar-button">
-                <Button variant="default">Log in</Button>
-            </Link>
-            <Link href="/auth/register" className="navbar-button navbar-button-secondary">
-                <Button>Sign up</Button>
-            </Link>
-            </Group>
-        </ScrollArea>
+            <ScrollArea h="calc(100vh - 80px" mx="-md">
+                <Divider my="sm" />
+                <Link href="/"  className={classes.link} onClick={closeDrawer}>
+                    Home
+                </Link>
+                <Link href="/alojamientos" className={classes.link} onClick={closeDrawer}>
+                    Alojamientos
+                </Link>
+                <Divider my="sm" />
+                <Group justify="center" grow pb="xl" px="md">
+                    <Link href="/auth/login" className="navbar-button">
+                        <Button variant="default">Login</Button>
+                    </Link>
+                    <Link href="/auth/register" className="navbar-button navbar-button-secondary">
+                        <Button>Registrar</Button>
+                    </Link>
+                </Group>
+            </ScrollArea>
         </Drawer>
     </Box>
   );
