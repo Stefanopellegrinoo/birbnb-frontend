@@ -1,5 +1,4 @@
 import { Geist, Geist_Mono } from "next/font/google";
-import "../styles/globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 import ClientLayout from "@/components/layout/ClientLayout";
 import '@mantine/core/styles.css';
@@ -27,7 +26,7 @@ export default function RootLayout({ children }) {
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <AuthProvider>
              <MantineProvider withGlobalStyles withNormalizeCSS>
-          <ClientLayout>{children}</ClientLayout>
+                <ClientLayout>{children}</ClientLayout>
              </MantineProvider>
         </AuthProvider>
       </body>
