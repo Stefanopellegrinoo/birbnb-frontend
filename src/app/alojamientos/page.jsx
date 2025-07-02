@@ -6,6 +6,7 @@ import "@/styles/Alojamientos.css"; // Asegúrate de tener este archivo CSS
 import { renderPagination } from "@/lib/utils";
 import Loader from "@/components/ui/Loader";
 import Filtros from "@/components/Filtros";
+import { AlojamientoCard } from "@/components/alojamientos/AlojamientoCard";
 
 function Alojamientos() {
 const [currentPage, setCurrentPage] = useState(1);
@@ -30,7 +31,6 @@ const handlePageChange = (page) => {
     setCurrentPage(page)
     window.scrollTo(0, 0)
   }
-
 
   const clean = (f) => {
     const defaults = {  precioMin:0, precioMax: 100000, huespedMax: 1 };
@@ -77,25 +77,26 @@ const handlePageChange = (page) => {
 
         <div className="alojamientos-grid">
           {alojamientos?.map((alojamiento) => (
-            <Link key={alojamiento.id} href={`/alojamientos/${alojamiento.id}`} className="alojamiento-card">
-              <img
-                src={
-                  alojamiento.fotos?.[0]
-                    ? `http://localhost:3000/images/${alojamiento.fotos[0]}`
-                    : "/file.svg"
-                }
-                alt={alojamiento.nombre}
-              />
-              <div className="card-content">
-                <h3>{alojamiento.nombre}</h3>
-                <p className="location">{alojamiento.ubicacion}</p>
-                <p className="description">{alojamiento.descripcion}</p>
-                <div className="card-footer">
-                  <span className="price">${alojamiento.precioPorNoche}/noche</span>
-                  <span className="rating">⭐ {alojamiento.rating}</span>
-                </div>
-              </div>
-            </Link>
+            // <Link key={alojamiento.id} href={`/alojamientos/${alojamiento.id}`} className="alojamiento-card">
+            //   <img
+            //     src={
+            //       alojamiento.fotos?.[0]
+            //         ? `http://localhost:3000/images/${alojamiento.fotos[0]}`
+            //         : "/file.svg"
+            //     }
+            //     alt={alojamiento.nombre}
+            //   />
+            //   <div className="card-content">
+            //     <h3>{alojamiento.nombre}</h3>
+            //     <p className="location">{alojamiento.ubicacion}</p>
+            //     <p className="description">{alojamiento.descripcion}</p>
+            //     <div className="card-footer">
+            //       <span className="price">${alojamiento.precioPorNoche}/noche</span>
+            //       <span className="rating">⭐ {alojamiento.rating}</span>
+            //     </div>
+            //   </div>
+            // </Link>
+            <AlojamientoCard  key={alojamiento.id} alojamiento={alojamiento}/>
           ))}
         </div>
 

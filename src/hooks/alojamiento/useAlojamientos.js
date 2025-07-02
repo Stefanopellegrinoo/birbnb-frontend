@@ -22,7 +22,7 @@ export default function useAlojamientos({ page = 1, limit = null, filtros = {} }
 
         const res = await axios.get("/alojamientos", { params });
 
-        setAlojamientos(res.data.data);
+        setAlojamientos(res.data.alojamientos);
         setTotalPages(res.data.totalPages || 0);
         setAlojamientosTotales(res.data.total || 0);
       } catch (err) {
