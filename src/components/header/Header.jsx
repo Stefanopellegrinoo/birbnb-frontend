@@ -19,7 +19,7 @@ import {
 import { useDisclosure } from '@mantine/hooks';
 import { MantineLogo } from '@mantinex/mantine-logo';
 import classes from './HeaderMegaMenu.module.css';
-
+import  Link from 'next/link';
 const mockdata = [
 ];
 
@@ -53,17 +53,17 @@ export default function Header() {
           <MantineLogo size={30} />
 
           <Group h="100%" gap={0} visibleFrom="sm">
-            <a href="#" className={classes.link}>
-              Home
-            </a>
+            <Link href="/" className={classes.link}>
+                Home
+            </Link>
             <HoverCard width={600} position="bottom" radius="md" shadow="md" withinPortal>
               <HoverCard.Target>
+                
                 <a href="#" className={classes.link}>
                   <Center inline>
                     <Box component="span" mr={5}>
                       Features
                     </Box>
-                    <IconChevronDown size={16} color={theme.colors.blue[6]} />
                   </Center>
                 </a>
               </HoverCard.Target>
@@ -97,17 +97,18 @@ export default function Header() {
                 </div>
               </HoverCard.Dropdown>
             </HoverCard>
-            <a href="#" className={classes.link}>
-              Learn
-            </a>
-            <a href="#" className={classes.link}>
-              Academy
-            </a>
+            <Link href="/alojamientos" className={classes.link}>
+              Alojamientos
+            </Link>
           </Group>
 
           <Group visibleFrom="sm">
-            <Button variant="default">Log in</Button>
-            <Button>Sign up</Button>
+            <Link href="/auth/login" className="navbar-button">
+                <Button variant="default">Log in</Button>
+            </Link>
+            <Link href="/auth/register" className="navbar-button navbar-button-secondary">
+                <Button>Sign up</Button>
+            </Link>
           </Group>
 
           <Burger opened={drawerOpened} onClick={toggleDrawer} hiddenFrom="sm" />
@@ -134,7 +135,6 @@ export default function Header() {
               <Box component="span" mr={5}>
                 Features
               </Box>
-              <IconChevronDown size={16} color={theme.colors.blue[6]} />
             </Center>
           </UnstyledButton>
           <Collapse in={linksOpened}>{links}</Collapse>
