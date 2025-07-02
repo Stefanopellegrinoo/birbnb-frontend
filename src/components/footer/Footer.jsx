@@ -1,6 +1,6 @@
 'use client';
 import { Anchor, Container, Group } from '@mantine/core';
-import { MantineLogo } from '@mantinex/mantine-logo';
+// import { MantineLogo } from '@mantinex/mantine-logo';
 import classes from './FooterSimple.module.css';
 
 const links = [
@@ -25,7 +25,7 @@ export function Footer() {
   return (
     <div className={classes.footer}>
       <Container className={classes.inner}>
-        <MantineLogo size={28} />
+        {/* <MantineLogo size={28} /> */}
         <Group className={classes.links}>{items}</Group>
       </Container>
     </div>

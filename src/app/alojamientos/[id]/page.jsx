@@ -9,6 +9,13 @@ import "../../../styles/AlojamientoDetalle.css";
 import { useParams, useRouter } from "next/navigation";
 import useAlojamientoById from "@/hooks/alojamiento/useAlojamientoById";
 import Loader from "@/components/ui/Loader";
+import Servicios from "@/components/alojamientos/alojamientoId/Servicios";
+import ReservaInfo from "@/components/alojamientos/alojamientoId/ReservaInfo";
+import Img from "@/components/ui/Img";
+import Volver from "@/components/ui/Volver";
+import AlojamientoNoEncontrado from "@/components/alojamientos/alojamientoId/AlojamientoNoEncontrado";
+import AlojamientoFotos from "@/components/alojamientos/alojamientoId/AlojamientoFotos";
+import { Divider } from "@mantine/core";
 
 // async function obtenerAlojamiento(id) {
 //   try {
@@ -36,16 +43,6 @@ function AlojamientoDetalle() {
   const formatearPrecio = (precio, moneda) => {
     const simbolo = moneda === "dolar" ? "$" : "$";
     return `${simbolo}${precio}`;
-  };
-
-  const formatearCaracteristicas = (caracteristicas) => {
-    const caracteristicasMap = {
-      wifi: "WiFi gratuito",
-      piscina: "Piscina",
-      aire_acondicionado: "Aire acondicionado",
-    };
-
-    return caracteristicas.map((car) => caracteristicasMap[car] || car);
   };
 
   const handleReserva = (e) => {
@@ -108,157 +105,25 @@ function AlojamientoDetalle() {
 
     return dias * alojamiento.precioPorNoche;
   };
-  if (loadingA)
-    return (
-    <Loader/>
-    );
-  if (error) return <p>Error al cargar alojamientos</p>;
-  if (!alojamiento) {
-    return (
-      <div className="alojamiento-detalle">
-        <div className="container">
-          <div className="detalle-main">
-            <p>Alojamiento no encontrado</p>
-          </div>
-        </div>
-      </div>
-    );
+
+  if (loadingA) return <Loader />;
+  // if (error) return <p>Error al cargar alojamientos</p>;
+  if (!alojamiento || error) {
+    return <AlojamientoNoEncontrado />;
   }
 
   return (
     <div className="alojamiento-detalle">
       <div className="container">
-        <button onClick={() => navigate.back(-1)} className="back-button">
-          ← Volver
-        </button>
-
+        <Volver navigate={navigate} />
         <div className="detalle-content">
-          <div className="detalle-main">
-            <img
-              src={
-                alojamiento.fotos && alojamiento.fotos.length > 0
-                  ? `/placeholder.svg?height=400&width=600&text=${alojamiento.fotos[0]}`
-                  : "/file.svg?height=400&width=600"
-              }
-              alt={alojamiento.nombre}
-              className="main-image"
-            />
-
-            <div className="info-section">
-              <h1>{alojamiento.nombre}</h1>
-              <p className="location">📍 {formatearUbicacion(alojamiento.direccion)}</p>
-              <div className="capacity">
-                👥 Hasta {alojamiento.cantHuespedesMax} huéspedes
-              </div>
-
-              <div className="horarios">
-                <div className="horario-item">
-                  <span className="horario-label">Check-in:</span>
-                  <span>{alojamiento.horarioChkIn}</span>
-                </div>
-                <div className="horario-item">
-                  <span className="horario-label">Check-out:</span>
-                  <span>{alojamiento.horarioChkOut}</span>
-                </div>
-              </div>
-
-              <div className="description">
-                <h3>Descripción</h3>
-                <p>{alojamiento.descripcion}</p>
-              </div>
-
-              <div className="amenities">
-                <h3>Servicios incluidos</h3>
-                <ul>
-                  {formatearCaracteristicas(alojamiento.caracteristicas).map((caracteristica, index) => (
-                    <li key={index}>{caracteristica}</li>
-                  ))}
-                </ul>
-              </div>
-            </div>
+          <div className="imagen-detalle">
+            <AlojamientoFotos alojamiento={alojamiento}/>
           </div>
-
-          <div className="reserva-sidebar">
-            <div className="reserva-card">
-              <div className="precio-info">
-                <span className="precio">
-                  {formatearPrecio(alojamiento.precioPorNoche, alojamiento.moneda)}
-                </span>
-                <span className="por-noche">/noche</span>
-              </div>
-
-              <form onSubmit={handleReserva} className="reserva-form">
-                <div className="form-row">
-                  <div className="form-group">
-                    <label>Fecha de entrada</label>
-                    <input
-                      type="date"
-                      value={fechaInicio}
-                      onChange={(e) => setFechaInicio(e.target.value)}
-                      min={new Date().toISOString().split("T")[0]}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Fecha de salida</label>
-                    <input
-                      type="date"
-                      value={fechaFin}
-                      onChange={(e) => setFechaFin(e.target.value)}
-                      min={
-                        fechaInicio || new Date().toISOString().split("T")[0]
-                      }
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div className="form-group">
-                  <label>Huéspedes (máx. {alojamiento.cantHuespedesMax})</label>
-                  <select
-                    value={huespedes}
-                    onChange={(e) =>
-                      setHuespedes(Number.parseInt(e.target.value))
-                    }
-                  >
-                    {Array.from(
-                      { length: alojamiento.cantHuespedesMax },
-                      (_, i) => i + 1
-                    ).map((num) => (
-                      <option key={num} value={num}>
-                        {num} huésped{num > 1 ? "es" : ""}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {fechaInicio && fechaFin && (
-                  <div className="precio-total">
-                    <strong>
-                      Total:{" "}
-                      {formatearPrecio(
-                        calcularPrecioTotal(),
-                        alojamiento.moneda
-                      )}
-                    </strong>
-                  </div>
-                )}
-
-                <button
-                  type="submit"
-                  className="reservar-button"
-                  disabled={loading}
-                >
-                  {loading ? "Procesando..." : "Reservar ahora"}
-                </button>
-              </form>
-
-              {!user && (
-                <p className="login-notice">
-                  <a href="/auth/login">Inicia sesión</a> para hacer una reserva
-                </p>
-              )}
-            </div>
+             <Divider my="md" />
+          <div className="detalle-main">
+            <Servicios alojamiento={alojamiento} />
+           <ReservaInfo alojamiento={alojamiento} user={user} />
           </div>
         </div>
       </div>
