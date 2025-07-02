@@ -53,6 +53,7 @@ export function Filtros({ filters, onChange, onSearch }) {
   const clearFilters = () => {
     const cleared = { pais: '', ciudad: '', precioMin: 0, precioMax: precioMaximoDefault, huespedMax: 1, caracEspeciales: [] };
     onChange(cleared);
+    onSearch();
   };
 
   const activeFiltersCount = Object.values(filters).filter(value => {
