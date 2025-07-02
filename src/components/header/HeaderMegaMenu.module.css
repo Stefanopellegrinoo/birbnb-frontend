@@ -1,5 +1,5 @@
 .header {
-  height: 80px;
+  height: 70px;
   padding-left: var(--mantine-spacing-md);
   padding-right: var(--mantine-spacing-md);
   border-bottom: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
@@ -43,4 +43,22 @@
   padding: var(--mantine-spacing-md) calc(var(--mantine-spacing-md) * 2);
   padding-bottom: var(--mantine-spacing-xl);
   border-top: 1px solid light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5));
+}
+
+/*Estilos propios mios*/
+.link {
+  padding: 8px 12px;
+  text-decoration: none;
+  color: #333;
+  border-bottom: 2px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.link:hover {
+  border-bottom: 2px solid #aaa;
+}
+
+.active {
+  border-bottom: 2px solid #1c7ed6; /* o el color que prefieras */
+  font-weight: 600;
 }
