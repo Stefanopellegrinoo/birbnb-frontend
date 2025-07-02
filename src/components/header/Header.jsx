@@ -1,19 +1,15 @@
 import {
-  Anchor,
   Box,
   Burger,
   Button,
-  Center,
-  Collapse,
   Divider,
   Drawer,
   Group,
   ScrollArea,
   Text,
-  ThemeIcon,
-  UnstyledButton,
-  useMantineTheme,
+  Title,
 } from '@mantine/core';
+
 import { useDisclosure } from '@mantine/hooks';
 import { MantineLogo } from '@mantinex/mantine-logo';
 import classes from './HeaderMegaMenu.module.css';
@@ -28,9 +24,11 @@ export default function Header() {
     <Box >
         <header className={classes.header}>
         <Group justify="space-between" h="100%">
-            <Link href="/" className="navbar-brand">
-                Birbnb
-            </Link>
+            <Group h="100%" gap={0} visibleFrom="sm">
+                <Link href="/" className={classes.link}>
+                    <Title order={2}>Birbnb</Title>
+                </Link>
+            </Group>
 
             <Group h="100%" gap={0} visibleFrom="sm">
                 <Link
@@ -62,13 +60,13 @@ export default function Header() {
         </header>
 
         <Drawer
-        opened={drawerOpened}
-        onClose={closeDrawer}
-        size="100%"
-        padding="md"
-        title="Navigation"
-        hiddenFrom="sm"
-        zIndex={1000000}
+            opened={drawerOpened}
+            onClose={closeDrawer}
+            size="100%"
+            padding="md"
+            title="Navegacion"
+            hiddenFrom="sm"
+            zIndex={1000000}
         >
             <ScrollArea h="calc(100vh - 80px" mx="-md">
                 <Divider my="sm" />
@@ -80,10 +78,10 @@ export default function Header() {
                 </Link>
                 <Divider my="sm" />
                 <Group justify="center" grow pb="xl" px="md">
-                    <Link href="/auth/login" className="navbar-button">
+                    <Link href="/auth/login" className="navbar-button" onClick={closeDrawer}>
                         <Button variant="default">Login</Button>
                     </Link>
-                    <Link href="/auth/register" className="navbar-button navbar-button-secondary">
+                    <Link href="/auth/register" className="navbar-button navbar-button-secondary" onClick={closeDrawer}>
                         <Button>Registrar</Button>
                     </Link>
                 </Group>
