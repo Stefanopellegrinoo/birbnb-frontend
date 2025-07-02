@@ -6,38 +6,23 @@ export function AlojamientoCard({ alojamiento }){
     ? `http://localhost:3000/images/${alojamiento.fotos[0]}`
     : '/file.svg';
   return (
-       <Link key={alojamiento.id} href={`/alojamientos/${alojamiento.id}`} passHref>
-    <Card shadow="sm" padding="lg" radius="md" withBorder>
-    
-           <Card.Section>
-          <Image
-            src={imageUrl}
-            alt={alojamiento.nombre}
-            height={200}
-            fit="cover"
-            withPlaceholder
-          />
-        </Card.Section>
-
-        <Stack spacing="xs" mt="sm">
-          <Text weight={600} size="lg">
-            {alojamiento.nombre}
-          </Text>
-          <Text color="dimmed" size="sm">
-            {alojamiento.ubicacion}
-          </Text>
-          <Text size="sm" lineClamp={2}>
-            {alojamiento.descripcion}
-          </Text>
-        </Stack>
-
-        <Group position="apart" mt="md">
-          <Badge color="green" variant="light">
-            ${alojamiento.precioPorNoche}/noche
-          </Badge>
-          <Text size="sm">⭐ {alojamiento.rating}</Text>
-        </Group>
-    </Card>
-    </Link>
+        <Link key={alojamiento.id} href={`/alojamientos/${alojamiento.id}`} className="alojamiento-card">
+            <img
+              src={
+                alojamiento.fotos?.[0]
+                  ? `http://localhost:3000/images/${alojamiento.fotos[0]}`
+                  : "/file.svg"
+              }
+              alt={alojamiento.nombre}
+            />
+            <div className="card-content">
+              <h3>{alojamiento.nombre}</h3>
+              <p className="location">{alojamiento.ubicacion}</p>
+              <p className="description">{alojamiento.descripcion}</p>
+              <div className="card-footer">
+                <span className="price">${alojamiento.precioPorNoche}/noche</span>
+              </div>
+            </div>
+          </Link>
   );
 }

@@ -2,6 +2,9 @@
 
 import React, { useState } from 'react';
 import '../styles/Filtros.css'; // Asegúrate de tener este archivo CSS
+import { FiltrosCompactos } from './ui/FiltrosCompactos';
+;
+
 // import { Input } from './ui/input';
 // import { Label } from './ui/label';
 // import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
@@ -74,89 +77,92 @@ export function Filtros({ filters, onChange, onSearch }) {
 
 
   return (
-    <div className="filtros-card">
-      <div className="filtros-header">
-        <h2 className="filtros-title">
-          Filtros de búsqueda
-          {/* {activeFiltersCount > 0 && {activeFiltersCount}} */}
-        </h2>
-        <div className="filtros-actions">
-          {activeFiltersCount > 0 && (
-            <button onClick={clearFilters} className="btn-clear">
-              Limpiar
-            </button>
-          )}
-        </div>
-      </div>
+    // <div className="filtros-card">
+    //   <div className="filtros-header">
+    //     <h2 className="filtros-title">
+    //       Filtros de búsqueda
+    //       {/* {activeFiltersCount > 0 && {activeFiltersCount}} */}
+    //     </h2>
+    //   </div>
 
-          <div className="filtros-content">
-            <div className="filtros-row">
-              <div className="filtros-group">
-                <label htmlFor="pais">País</label>
-                <input type='text' id="pais" value={filters.pais} onChange={e => handleFilterChange('pais', e.target.value)} />
-              </div>
-              <div className="filtros-group">
-                <label htmlFor="ciudad">Ciudad</label>
-                <input type='text' id="ciudad" value={filters.ciudad} onChange={e => handleFilterChange('ciudad', e.target.value)} />
-              </div>
-            </div>
-              <div className="filtros-row">
-              <div className="filtros-group">
-                <label htmlFor="precioMin">Precio mínimo (€)</label>
-                <input
-                  id="precioMin"
-                  type="number"
-                  min="0"
-                  max={precioMaximoDefault}
-                  value={filters.precioMin}
-                  onChange={e => handlePriceInputChange('min', e.target.value)}
-                />
-              </div>
-              <div className="filtros-group">
-                <label htmlFor="precioMax">Precio máximo (€)</label>
-                <input
-                  id="precioMax"
-                  type="number"
-                  min="0"
-                  max={precioMaximoDefault}
-                  value={filters.precioMax}
-                  onChange={e => handlePriceInputChange('max', e.target.value)}
-                />
-              </div>
-            </div>
-            <div className="filtros-group">
-              <label>Huéspedes</label>
-              <div className="filtros-guest-controls">
-                <button onClick={() => handleFilterChange('huespedMax', Math.max(1, filters.huespedMax - 1))}>-</button>
-                <span>{filters.huespedMax}</span>
-                <button onClick={() => handleFilterChange('huespedMax', filters.huespedMax + 1)}>+</button>
-              </div>
-            </div>
-            <div className="filtros-group">
-              <label>Comodidades</label>
-              <div className="filtros-amenities">
-                  {amenities.map(amenity => (
-                  <label key={amenity} className="filtros-amenity">
-                    <input type='checkbox'
-                      checked={filters.caracEspeciales.includes(amenity)}
-                      onChange={e => handleAmenityChange(amenity,  e.target.checked)}
-                    />
-                    {amenity}
-                  </label>
-                ))}
-              </div>
-            </div>
-                <div className="flex gap-2 pt-4 border-t">
-              <button onClick={onSearch} className="flex-1">
-                Buscar Alojamientos
-              </button>
-              {activeFiltersCount > 0 && (
-                <button variant="outline" onClick={clearFilters}>
-                  Limpiar
-                </button>
-              )}
-            </div>
-          </div>
+    //         {/* <Accordion1/> */}
+    //       <div className="filtros-content">
+    //         <div className="filtros-row">
+    //           <div className="filtros-group">
+    //             <label htmlFor="pais">País</label>
+    //             <input type='text' id="pais" value={filters.pais} onChange={e => handleFilterChange('pais', e.target.value)} />
+    //           </div>
+    //           <div className="filtros-group">
+    //             <label htmlFor="ciudad">Ciudad</label>
+    //             <input type='text' id="ciudad" value={filters.ciudad} onChange={e => handleFilterChange('ciudad', e.target.value)} />
+    //           </div>
+    //         </div>
+    //           <div className="filtros-row">
+    //           <div className="filtros-group">
+    //             <label htmlFor="precioMin">Precio mínimo (€)</label>
+    //             <input
+    //               id="precioMin"
+    //               type="number"
+    //               min="0"
+    //               max={precioMaximoDefault}
+    //               value={filters.precioMin}
+    //               onChange={e => handlePriceInputChange('min', e.target.value)}
+    //             />
+    //           </div>
+    //           <div className="filtros-group">
+    //             <label htmlFor="precioMax">Precio máximo (€)</label>
+    //             <input
+    //               id="precioMax"
+    //               type="number"
+    //               min="0"
+    //               max={precioMaximoDefault}
+    //               value={filters.precioMax}
+    //               onChange={e => handlePriceInputChange('max', e.target.value)}
+    //             />
+    //           </div>
+    //         </div>
+    //         <div className="filtros-group">
+    //           <label>Huéspedes</label>
+    //           <div className="filtros-guest-controls">
+    //             <button onClick={() => handleFilterChange('huespedMax', Math.max(1, filters.huespedMax - 1))}>-</button>
+    //             <span>{filters.huespedMax}</span>
+    //             <button onClick={() => handleFilterChange('huespedMax', filters.huespedMax + 1)}>+</button>
+    //           </div>
+    //         </div>
+    //         <div className="filtros-group">
+    //           <label>Comodidades</label>
+    //           <div className="filtros-amenities">
+    //               {amenities.map(amenity => (
+    //               <label key={amenity} className="filtros-amenity">
+    //                 <input type='checkbox'
+    //                   checked={filters.caracEspeciales.includes(amenity)}
+    //                   onChange={e => handleAmenityChange(amenity,  e.target.checked)}
+    //                 />
+    //                 {amenity}
+    //               </label>
+    //             ))}
+    //           </div>
+    //         </div>
+    //             <div className="flex gap-2 pt-4 border-t">
+    //           <button onClick={onSearch} className="flex-1">
+    //             Buscar Alojamientos
+    //           </button>
+    //           {activeFiltersCount > 0 && (
+    //             <button variant="outline" onClick={clearFilters}>
+    //               Limpiar
+    //             </button>
+    //           )}
+    //         </div>
+    //       </div>
+    // </div>
+    <div>
+      <FiltrosCompactos
+  filters={filters}
+  setFilters={onChange}
+  onSearch={onSearch}
+  // clearFilters={resetFiltros}
+  amenities={['WiFi', 'Cocina', 'Piscina']}
+/>
     </div>
   )
 }

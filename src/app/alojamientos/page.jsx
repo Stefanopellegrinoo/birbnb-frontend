@@ -7,6 +7,7 @@ import { renderPagination } from "@/lib/utils";
 import Loader from "@/components/ui/Loader";
 import Filtros from "@/components/Filtros";
 import { AlojamientoCard } from "@/components/alojamientos/AlojamientoCard";
+import { Pagination } from "@mantine/core";
 
 function Alojamientos() {
 const [currentPage, setCurrentPage] = useState(1);
@@ -65,7 +66,7 @@ const handlePageChange = (page) => {
   return (
     <div className="alojamientos">
       <div className="alojamientos-container">
-        <h1>Todos los Alojamientos</h1>
+  
              <Filtros
         filters={uiFilters}
         onChange={setUiFilters}
@@ -77,48 +78,22 @@ const handlePageChange = (page) => {
 
         <div className="alojamientos-grid">
           {alojamientos?.map((alojamiento) => (
-            // <Link key={alojamiento.id} href={`/alojamientos/${alojamiento.id}`} className="alojamiento-card">
-            //   <img
-            //     src={
-            //       alojamiento.fotos?.[0]
-            //         ? `http://localhost:3000/images/${alojamiento.fotos[0]}`
-            //         : "/file.svg"
-            //     }
-            //     alt={alojamiento.nombre}
-            //   />
-            //   <div className="card-content">
-            //     <h3>{alojamiento.nombre}</h3>
-            //     <p className="location">{alojamiento.ubicacion}</p>
-            //     <p className="description">{alojamiento.descripcion}</p>
-            //     <div className="card-footer">
-            //       <span className="price">${alojamiento.precioPorNoche}/noche</span>
-            //       <span className="rating">⭐ {alojamiento.rating}</span>
-            //     </div>
-            //   </div>
-            // </Link>
             <AlojamientoCard  key={alojamiento.id} alojamiento={alojamiento}/>
           ))}
         </div>
 
         {totalPages > 1 && (
           <div className="pagination">
-            <button
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-              className="pagination-button"
-            >
-              Anterior
-            </button>
-
-            {renderPagination(currentPage, limit, totalPages)}
-
-            <button
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}
-              className="pagination-button"
-            >
-              Siguiente
-            </button>
+            <Pagination
+              total={totalPages}
+              value={currentPage}
+              onChange={handlePageChange}
+              siblings={1}
+              boundaries={1}
+              mt="xl"
+              radius="md"
+              color="blue"
+            />
           </div>
         )}
       </div>

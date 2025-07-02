@@ -12,5 +12,19 @@ const Loader = () => {
     </div>
   );
 };
-
+/*
+Colocar loader usando el componente de mantine
+const Loader = () => {
+  return (
+    <Center h={200}>
+      <Stack align="center" spacing="xs">
+        <Loader color="blue" size="lg" />
+        <Text size="sm" c="dimmed">
+          Cargando...
+        </Text>
+      </Stack>
+    </Center>
+  );
+};
+*/
 export default Loader;
