@@ -7,6 +7,16 @@
     return `${simbolo}${precio}`
   }
 
+  export const  formatearCaracteristicas = (caracteristicas) => {
+    const caracteristicasMap = {
+      wifi: "WiFi gratuito",
+      piscina: "Piscina",
+      aire_acondicionado: "Aire acondicionado",
+    };
+
+    return caracteristicas.map((car) => caracteristicasMap[car] || car);
+  };
+
   export const renderPagination = (currentPage, limit, totalPages ) => {
     const pages = []
 

@@ -22,11 +22,14 @@
   text-decoration: underline;
 }
 
-.detalle-content {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 40px;
-  align-items: start;
+
+.detalle-main{
+  display: flex;
+  justify-content: space-around;
+}
+
+.imagen-detalle{
+  width: 100%;
 }
 
 .main-image {
