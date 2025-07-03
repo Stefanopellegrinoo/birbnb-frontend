@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import axios from "@/lib/api";
-import { mockAlojamientos } from "@/data/mockData";
 
 export default function useAlojamientoById(id) {
   const [alojamiento, setAlojamiento] = useState(null);

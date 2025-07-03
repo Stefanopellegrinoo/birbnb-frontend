@@ -45,7 +45,7 @@
   border-top: 1px solid light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5));
 }
 
-/*Estilos propios mios*/
+/*Estilos propios*/
 
 .active {
   border-bottom: 2px solid #1c7ed6; /* o el color que prefieras */

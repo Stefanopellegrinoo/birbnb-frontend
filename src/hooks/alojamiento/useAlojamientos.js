@@ -1,7 +1,6 @@
 // src/hooks/alojamiento/useAlojamientos.js
 import { useState, useEffect } from "react";
 import axios from "@/lib/api";
-import { mockAlojamientos } from "@/data/mockData";
 
 export default function useAlojamientos({ page = 1, limit = null, filtros = {} } = {}) {
   const [alojamientos, setAlojamientos] = useState([]);
