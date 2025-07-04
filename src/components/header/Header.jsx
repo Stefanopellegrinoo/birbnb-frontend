@@ -16,13 +16,12 @@ import {
 } from '@mantine/core';
 import { useEffect, useState, useRef } from 'react';
 import { useDisclosure } from '@mantine/hooks';
-import { IconBell, IconBellFilled } from '@tabler/icons-react';
 import classes from '../header/HeaderMegaMenu.module.css';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import axios from "@/lib/api";
-import { io } from "socket.io-client";
+//import { io } from "socket.io-client";
 import router from 'next/router';
 import NotificationsMenu from './NotificationsMenu';
 import MainNav from './MainNav';
@@ -34,7 +33,8 @@ export default function Header() {
     const { user, logout } = useAuth();
     const [notificaciones, setNotificaciones] = useState([]);
     const [tieneNotificacionesNuevas, setTieneNotificacionesNuevas] = useState(false);
-    const socketRef = useRef(null);
+
+    //const socketRef = useRef(null);
 
     const handleLogout = () => {
         logout();
@@ -45,11 +45,13 @@ export default function Header() {
         if (!user) {
             setNotificaciones([]);
             setTieneNotificacionesNuevas(false);
+            /*
             // Desconectar socket si existe
             if (socketRef.current) {
                 socketRef.current.disconnect();
                 socketRef.current = null;
             }
+            */
             return;
         }
 
@@ -67,7 +69,7 @@ export default function Header() {
                 setNotificaciones([]);
                 setTieneNotificacionesNuevas(false);
             });
-
+        /*
         const socket = io(process.env.NEXT_PUBLIC_API_BASE_URL, {
             transports: ["websocket", "polling"],
             path: "/socket.io"
@@ -88,6 +90,7 @@ export default function Header() {
             socket.disconnect();
             socketRef.current = null;
         };
+        */
     }, [user]);
     
     return (
