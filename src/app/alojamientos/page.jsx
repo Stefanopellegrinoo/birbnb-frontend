@@ -8,6 +8,7 @@ import Loader from "@/components/ui/Loader";
 import Filtros from "@/components/Filtros";
 import { AlojamientoCard } from "@/components/alojamientos/AlojamientoCard";
 import { Pagination } from "@mantine/core";
+import CardSkeleton from "@/components/ui/CardSkeleton";
 
 function Alojamientos() {
 const [currentPage, setCurrentPage] = useState(1);
@@ -56,11 +57,6 @@ const handlePageChange = (page) => {
     setApiFilters(clean(uiFilters));
   };
 
-  if (loading){
-     return(
-        <Loader/>
-     ) 
-  }
   if (error) return <p>Error al cargar alojamientos</p>;
 
   return (
@@ -77,9 +73,13 @@ const handlePageChange = (page) => {
         </p>
 
         <div className="alojamientos-grid">
-          {alojamientos?.map((alojamiento) => (
-            <AlojamientoCard  key={alojamiento.id} alojamiento={alojamiento}/>
-          ))}
+         {loading ? (
+             <CardSkeleton n={6}/>
+           ) : (
+             alojamientos?.map((alojamiento) => (
+               <AlojamientoCard alojamiento={alojamiento} />
+             ))
+           )}
         </div>
 
         {totalPages > 1 && (

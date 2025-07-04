@@ -1,17 +1,23 @@
+'use client'
+
 import React, { useState } from "react";
 import { formatearCaracteristicas, formatearPrecio } from "@/lib/utils";
-import { useRouter } from "next/router";
+import { useRouter } from 'next/navigation';
 import { Button } from "@mantine/core";
+import axios from "@/lib/api";
+import ErrorAlert from "@/components/alert/ErrorAlert";
 
 const ReservaInfo = ({ alojamiento, user }) => {
   const [fechaInicio, setFechaInicio] = useState("");
   const [fechaFin, setFechaFin] = useState("");
   const [huespedes, setHuespedes] = useState(1);
   const [loading, setLoading] = useState(false);
-  // const navigate = useRouter();
+  const [error, setError] = useState(false)
+  const [message, setMessage] = useState("")
+  const navigate = useRouter();
   console.log(user);
 
-  const handleReserva = (e) => {
+  const handleReserva = async (e) => {
     e.preventDefault();
 
     if (!user) {
@@ -32,34 +38,51 @@ const ReservaInfo = ({ alojamiento, user }) => {
     }
 
     setLoading(true);
+    
+    const nuevaReserva = {
+      huespedReservador:'682c981661bd44f5f10789b0',
+      alojamiento,
+      rangoFechaInicio: fechaInicio,
+      rangoFechaFinal:fechaFin,
+      cantHuespedes: huespedes,
+      precioTotal: calcularPrecioTotal(),
+      fechaReserva: new Date().toISOString(),
+      usuarioId: user.id,
+      direccion: alojamiento.direccion,
+    };
 
-    // Simular reserva
-    setTimeout(() => {
-      const reservas = JSON.parse(localStorage.getItem("reservas") || "[]");
-      const nuevaReserva = {
-        id: Date.now(),
-        alojamientoId: alojamiento.id,
-        alojamientoNombre: alojamiento.nombre,
-        alojamientoImagen:
-          alojamiento.fotos && alojamiento.fotos.length > 0
-            ? alojamiento.fotos[0]
-            : null,
-        fechaInicio,
-        fechaFin,
-        huespedes,
-        precioTotal: calcularPrecioTotal(),
-        fechaReserva: new Date().toISOString(),
-        usuarioId: user.id,
-        direccion: alojamiento.direccion,
-      };
-
-      reservas.push(nuevaReserva);
-      localStorage.setItem("reservas", JSON.stringify(reservas));
+try {
+   const res = await axios.post("/reservas",
+       nuevaReserva
+    )
+     
+    //FALTARIA MANEJO DE ERRORES
 
       setLoading(false);
       alert("¡Reserva realizada con éxito!");
       navigate.push("/reservas");
-    }, 1000);
+
+
+} catch (error) {
+  console.log(error.response.data.message)
+      setMessage(error.response.data.message);
+      setError(true)
+      setLoading(false)
+  
+}
+   
+
+    // Simular reserva
+    // setTimeout(() => {
+    //   const reservas = JSON.parse(localStorage.getItem("reservas") || "[]");
+
+    //   reservas.push(nuevaReserva);
+    //   localStorage.setItem("reservas", JSON.stringify(reservas));
+
+    //   setLoading(false);
+    //   alert("¡Reserva realizada con éxito!");
+    //   navigate.push("/reservas");
+    // }, 1000);
   };
 
   const calcularPrecioTotal = () => {
@@ -150,12 +173,18 @@ const ReservaInfo = ({ alojamiento, user }) => {
             // >
             //   {loading ? "Procesando..." : "Reservar ahora"}
             // </button>
-            <Button variant="filled" color="indigo" radius="lg">
+            <Button type="submit" variant="filled" color="indigo" radius="lg">
                 {loading ? "Procesando..." : "Reservar ahora"}
             </Button>
           )}
         </form>
-      </div>
+       
+      </div> 
+      {
+          error && (
+            <ErrorAlert message={message} title={"error"} onChange={setError} />
+          )
+        }
     </div>
   );
 };

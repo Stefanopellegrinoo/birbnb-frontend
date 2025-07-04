@@ -14,15 +14,16 @@ import {
   Text,
 } from '@mantine/core'
 import { useState } from 'react';
-// import {
-//   IconAdjustments,
-//   IconSearch,
-//   IconPlus,
-//   IconMinus,
-//   IconX,
-//   IconChevronDown,
-//   IconChevronUp,
-// } from '@tabler/icons-react';
+import { FiltroComodidades } from './FiltroComodidades';
+import {
+  IconAdjustments,
+  IconSearch,
+  IconPlus,
+  IconMinus,
+  IconX,
+  IconChevronDown,
+  IconChevronUp,
+} from '@tabler/icons-react';
 
 export function FiltrosCompactos({
   filters,
@@ -65,7 +66,7 @@ export function FiltrosCompactos({
         <Button
           variant="subtle"
           size="xs"
-        //   leftIcon={<IconAdjustments size={16} />}
+          leftIcon={<IconAdjustments size={16} />}
           onClick={() => setOpened((o) => !o)}
         >
           Filtros
@@ -74,14 +75,14 @@ export function FiltrosCompactos({
         <Group spacing={4}>
           <Button
             size="xs"
-            // leftIcon={<IconSearch size={14} />}
+            leftIcon={<IconSearch size={14} />}
             onClick={onSearch}
           >
             Buscar
           </Button>
           {activeFilters && (
             <ActionIcon size="xs" onClick={clearFilters}>
-              {/* <IconX size={14} /> */} X
+              <IconX size={14} /> 
             </ActionIcon>
           )}
         </Group>
@@ -132,7 +133,7 @@ export function FiltrosCompactos({
                 update('huespedMax', Math.max(1, filters.huespedMax - 1))
               }
             >
-              {/* <IconMinus size={14} />  */} -
+              <IconMinus size={14} />  
             </ActionIcon>
             <NumberInput
               size="xs"
@@ -147,7 +148,7 @@ export function FiltrosCompactos({
               size="xs"
               onClick={() => update('huespedMax', filters.huespedMax + 1)}
             >
-              {/* <IconPlus size={14} /> */} +
+              <IconPlus size={14} /> 
             </ActionIcon>
           </Group>
 
@@ -156,27 +157,18 @@ export function FiltrosCompactos({
             size="xs"
             variant="subtle"
             onClick={() => setShowAmenities((s) => !s)}
-            // rightIcon={
-            //   showAmenities ? <IconChevronUp size={14} /> : <IconChevronDown size={14} />
-            // }
+            rightIcon={
+              showAmenities ? <IconChevronUp size={14} /> : <IconChevronDown size={14} />
+            }
           >
             Comodidades
           </Button>
 
           <Collapse in={showAmenities}>
-            <Stack spacing={4}>
-              {amenities.map((amenity) => (
-                <Checkbox
-                  key={amenity}
-                  label={amenity}
-                  size="xs"
-                  checked={filters.caracEspeciales.includes(amenity)}
-                  onChange={(e) =>
-                    toggleAmenity(amenity, e.currentTarget.checked)
-                  }
-                />
-              ))}
-            </Stack>
+          <FiltroComodidades 
+          amenities={amenities} 
+          selected={filters.caracEspeciales} 
+          onChange={toggleAmenity}/>
           </Collapse>
         </Stack>
       </Collapse>

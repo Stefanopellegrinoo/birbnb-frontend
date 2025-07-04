@@ -3,16 +3,19 @@ import { Checkbox, Stack, Text } from '@mantine/core';
 export function FiltroComodidades({ amenities, selected, onChange }) {
   return (
     <div>
-      <Text size="sm" mb={4}>Comodidades</Text>
-      <Stack spacing={4}>
+      <Stack spacing={2}> <div className="ammenities-list">
         {amenities.map((amenity) => (
-          <Checkbox
+         
+             <Checkbox
             key={amenity}
             label={amenity}
-            checked={selected.includes(amenity)}
-            onChange={(e) => onChange(amenity, e.target.checked)}
+            checked={selected?.includes(amenity)}
+            onChange={(e) => onChange(amenity, e.currentTarget.checked)}
           />
-        ))}
+        
+         
+        ))} 
+         </div>
       </Stack>
     </div>
   );

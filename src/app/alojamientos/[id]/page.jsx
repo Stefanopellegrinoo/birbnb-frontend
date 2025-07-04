@@ -112,6 +112,8 @@ function AlojamientoDetalle() {
     return <AlojamientoNoEncontrado />;
   }
 
+  console.log(user)
+
   return (
     <div className="alojamiento-detalle">
       <div className="container">

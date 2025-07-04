@@ -1,5 +1,6 @@
 "use client"
 
+import api from "@/lib/api"
 import { createContext, useContext, useState, useEffect } from "react"
 
 const AuthContext = createContext()
@@ -20,16 +21,48 @@ export function AuthProvider({ children }) {
     setLoading(false)
   }, [])
 
-  const login = (email, password) => {
+  const login = async (email, password) => {
     // Simulación de login
-    const userData = { id: 1, email, name: email.split("@")[0] }
+
+    const u = {
+      email,
+      password
+    }
+try {
+   const res = await api.post("/login",{
+        user: u
+    })    
+    console.log(res)
+    const userData = res.data
+    setUser(userData.user)
+    localStorage.setItem("token", JSON.stringify(userData.accessToken))
+    return true
+} catch (error) {
+  console.log(error)
+}
+   
+  }
+
+  const register = async (email, password, name) => {
+    // Simulación de registro
+
+        const u = {
+      email,
+      nombre: name,
+      password
+    }
+try {
+   const res = await api.post("/register",{
+        user: u
+    })    
+    console.log(res)
+    const userData = res.user
     setUser(userData)
     localStorage.setItem("user", JSON.stringify(userData))
     return true
-  }
-
-  const register = (email, password, name) => {
-    // Simulación de registro
+} catch (error) {
+  console.log(error)
+}
     const userData = { id: Date.now(), email, name }
     setUser(userData)
     localStorage.setItem("user", JSON.stringify(userData))

@@ -1,5 +1,5 @@
 .alojamiento-detalle {
-  padding: 40px 20px;
+  padding: 20px 20px;
   min-height: calc(100vh - 70px);
 }
 
@@ -240,6 +240,12 @@
 }
 
 @media (max-width: 768px) {
+
+  .detalle-main{
+    display: flex;
+    flex-direction: column ;
+  }
+
   .detalle-content {
     grid-template-columns: 1fr;
     gap: 30px;
