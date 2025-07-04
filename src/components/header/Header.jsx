@@ -9,117 +9,110 @@ import {
   Group,
   ScrollArea,
   Text,
+  Flex,
   Title,
   Menu,
   ActionIcon
 } from '@mantine/core';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useDisclosure } from '@mantine/hooks';
-import { IconBell } from '@tabler/icons-react';
+import { IconBell, IconBellFilled } from '@tabler/icons-react';
 import classes from '../header/HeaderMegaMenu.module.css';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import axios from "@/lib/api";
+import { io } from "socket.io-client";
+import router from 'next/router';
+import NotificationsMenu from './NotificationsMenu';
+import MainNav from './MainNav';
+import UserMenu from './UserMenu';
 
 export default function Header() {
     const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
     const pathname = usePathname();
-    const { user, logout } = useAuth()
+    const { user, logout } = useAuth();
     const [notificaciones, setNotificaciones] = useState([]);
+    const [tieneNotificacionesNuevas, setTieneNotificacionesNuevas] = useState(false);
+    const socketRef = useRef(null);
 
-    
     const handleLogout = () => {
-        logout()
-        router.push("/")
-    }
+        logout();
+        router.push("/");
+    };
+
     useEffect(() => {
         if (!user) {
             setNotificaciones([]);
+            setTieneNotificacionesNuevas(false);
+            // Desconectar socket si existe
+            if (socketRef.current) {
+                socketRef.current.disconnect();
+                socketRef.current = null;
+            }
             return;
         }
+
+        // ID hardcodeado mientras no hay login
+        const userId = '682a6b741871e5f4f2920882';
+
+        // Fetch inicial de notificaciones
         axios
-            .get(`usuarios/682a6b741871e5f4f2920882/notificaciones/no-leidas`)
-            .then(res => setNotificaciones(res.data))
-            .catch(() => setNotificaciones([]));
+            .get(`/usuarios/${userId}/notificaciones/no-leidas`)
+            .then(res => {
+                setNotificaciones(res.data);
+                setTieneNotificacionesNuevas(res.data.length > 0);
+            })
+            .catch(() => {
+                setNotificaciones([]);
+                setTieneNotificacionesNuevas(false);
+            });
+
+        const socket = io(process.env.NEXT_PUBLIC_API_BASE_URL, {
+            transports: ["websocket", "polling"],
+            path: "/socket.io"
+        });
+        socketRef.current = socket;
+
+        socket.emit("join", userId);
+
+        socket.on("nueva_notificacion", (nuevaNotificacion) => {
+            const {notificacion} = nuevaNotificacion;
+            console.log("Nueva notificación recibida:", notificacion);
+            setNotificaciones(prev => [notificacion, ...prev]);
+            setTieneNotificacionesNuevas(true);
+        });
+
+        // Cleanup al desmontar o cambiar usuario
+        return () => {
+            socket.disconnect();
+            socketRef.current = null;
+        };
     }, [user]);
+    
     return (
     <Box>
         <header className={classes.header}>
         <Group justify="space-between" h="100%">
             <Group h="100%" gap={0} visibleFrom="sm">
-            <Link href="/" className={classes.link}>
-                <Title order={2}>Birbnb</Title>
-            </Link>
+                <Link href="/" className={classes.link}>
+                    <Title order={2}>Birbnb</Title>
+                </Link>
             </Group>
 
             <Group h="100%" gap={0} visibleFrom="sm">
-            <Link
-                href="/"
-                className={`${classes.link} ${pathname === '/' ? classes.active : ''}`}
-            >
-                Home
-            </Link>
-
-            <Link
-                href="/alojamientos"
-                className={`${classes.link} ${pathname === '/alojamientos' ? classes.active : ''}`}
-            >
-                Alojamientos
-            </Link>
+            <MainNav pathname={pathname} classes={classes} />
             </Group>
 
             <Group visibleFrom="sm">
-                {user?(
-                    <>
-                                    <Menu
-                    withArrow
-                    offset={10}
-                    position="bottom-end"
-                    transitionProps={{ transition: 'pop-top-right' }}
-                >
-                    <Menu.Target>
-                    <ActionIcon variant="subtle" size="lg" aria-label="Ver notificaciones">
-                        <IconBell size={22} />
-                    </ActionIcon>
-                    </Menu.Target>
-
-                    <Menu.Dropdown>
-                    <Menu.Label>Notificaciones</Menu.Label>
-                    {notificaciones.length === 0 ? (
-                        <Menu.Item disabled>No tienes notificaciones</Menu.Item>
-                    ) : (
-                        notificaciones.map((n, i) => (
-                            <Menu.Item key={i}>{n.mensaje}</Menu.Item>
-                        ))
-                    )}
-                    <Menu.Divider />
-                    <Menu.Item component={Link} href="/notificaciones">
-                        Ver todas las notificaciones
-                    </Menu.Item>
-                    </Menu.Dropdown>
-                </Menu>
-                    </>
-                ):null}
-
-                {user ? (
-                <>
-                <Link href="/reservas" className="navbar-button">
-                    <Button variant="default">Mis Reservas</Button>
-                </Link>
-                <Button onClick={handleLogout}>Cerrar Sesión</Button>
-
-                </>
-                ) : (
-                <>
-                    <Link href="/auth/login" className="navbar-button">
-                        <Button variant="default">Login</Button>
-                    </Link>
-                    <Link href="/auth/register" className="navbar-button navbar-button-secondary">
-                        <Button>Registrar</Button>
-                    </Link>
-                </>
+                {user && (
+                    <NotificationsMenu
+                      notificaciones={notificaciones}
+                      tieneNotificacionesNuevas={tieneNotificacionesNuevas}
+                      setTieneNotificacionesNuevas={setTieneNotificacionesNuevas}
+                    />
                 )}
+                <UserMenu user={user} handleLogout={handleLogout} />
             </Group>
 
             <Burger opened={drawerOpened} onClick={toggleDrawer} hiddenFrom="sm" />
@@ -131,17 +124,25 @@ export default function Header() {
         onClose={closeDrawer}
         size="100%"
         padding="md"
-        title="Navegación"
         hiddenFrom="sm"
         zIndex={1000000}
         >
         <ScrollArea h="calc(100vh - 80px)" mx="-md">
+            <Flex justify="center" mb="md">
+                <Title order={2} className={classes.title} >
+                    Navegacion
+                </Title>
+            </Flex>
+
             <Divider my="sm" />
             <Link href="/" className={classes.link} onClick={closeDrawer}>
             Home
             </Link>
             <Link href="/alojamientos" className={classes.link} onClick={closeDrawer}>
             Alojamientos
+            </Link>
+            <Link href="/notificaciones" className={classes.link} onClick={closeDrawer}>
+            Notificaciones
             </Link>
             <Divider my="sm" />
             <Group justify="center" grow pb="xl" px="md">
