@@ -28,18 +28,18 @@ export function AuthProvider({ children }) {
       email,
       password
     }
-try {
-   const res = await api.post("/login",{
-        user: u
-    })    
-    console.log(res)
-    const userData = res.data
-    setUser(userData.user)
-    localStorage.setItem("token", JSON.stringify(userData.accessToken))
-    return true
-} catch (error) {
+    try {
+      const res = await api.post("/login",{
+            user: u
+        })    
+        console.log(res)
+        const userData = res.data
+        setUser(userData.user)
+        localStorage.setItem("token", JSON.stringify(userData.accessToken))
+        return true
+    } catch (error) {
   console.log(error)
-}
+  }
    
   }
 
