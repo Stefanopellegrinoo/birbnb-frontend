@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from "@mantine/core";
 import axios from "@/lib/api";
 import ErrorAlert from "@/components/alert/ErrorAlert";
+import SelectorFecha from "@/components/ui/SelectorFecha";
 
 const ReservaInfo = ({ alojamiento, user }) => {
   const [fechaInicio, setFechaInicio] = useState("");
@@ -107,7 +108,7 @@ try {
 
         <form onSubmit={handleReserva} className="reserva-form">
           <div className="form-row">
-            <div className="form-group">
+            {/* <div className="form-group">
               <label>Fecha de entrada</label>
               <input
                 type="date"
@@ -126,6 +127,10 @@ try {
                 min={fechaInicio || new Date().toISOString().split("T")[0]}
                 required
               />
+            </div> */}
+            <div className="form-group">
+
+            <SelectorFecha/>
             </div>
           </div>
 

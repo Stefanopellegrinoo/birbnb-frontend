@@ -42,6 +42,7 @@ export default function Header() {
     };
 
     useEffect(() => {
+        console.log(user)
         if (!user) {
             setNotificaciones([]);
             setTieneNotificacionesNuevas(false);
