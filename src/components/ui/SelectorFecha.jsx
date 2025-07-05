@@ -1,22 +1,32 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { DatePickerInput } from '@mantine/dates';
 import 'dayjs/locale/es';
 import '../../styles/SelectorFecha.css';
 
 
-export default function SelectorFecha() {
-  const [range, setRange] = useState([new Date(), null]);
-const diasNoDisponibles = [
-  '2025-07-24',
-  '2025-12-25',
-  '2025-12-31',
-  // … más fechas en formato YYYY-MM-DD
-]
+export default function SelectorFecha({changeFechaInicio, changeFechafin, diasNoDisponibles}) {
+ 
+  const [range, setRange] = useState([null, null]);
 
-  const excludeDates = useMemo(
-    () => diasNoDisponibles.map(d => new Date(d)),
-    []
-  );
+  useEffect(()=>{
+    changeFechaInicio(range[0])
+    changeFechafin(range[1])
+  }, [range])
+
+
+function isFechaReservada(date, rangosFechas) {
+  const día = new Date(date);
+  día.setHours(0, 0, 0, 0);
+
+  return rangosFechas.some(({ fechaInicio, fechaFin }) => {
+    const inicio = new Date(fechaInicio);
+    const fin    = new Date(fechaFin);
+    inicio.setHours(0, 0, 0, 0);
+    fin.setHours(0, 0, 0, 0);
+
+    return día >= inicio && día <= fin;
+  });
+}
 
   return (
     <div className="sf-container">
@@ -32,9 +42,9 @@ const diasNoDisponibles = [
         value={range}
         onChange={setRange}
         clearable={false}
-        valueFormat="MMMM D, YYYY"
+        valueFormat="D  MMMM  YYYY"
         classNames={{ input: 'sf-input' }}
-         excludeDate={(date) => diasNoDisponibles.includes(date)}
+        excludeDate={date => isFechaReservada(date, diasNoDisponibles)}
          
       />
     </div>

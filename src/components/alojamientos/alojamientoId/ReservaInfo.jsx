@@ -16,7 +16,13 @@ const ReservaInfo = ({ alojamiento, user }) => {
   const [error, setError] = useState(false)
   const [message, setMessage] = useState("")
   const navigate = useRouter();
-  console.log(user);
+
+  const diasNoDisponibles = [
+    '2025-07-24',
+    '2025-12-25',
+    '2025-12-31',
+    // … más fechas en formato YYYY-MM-DD
+  ]
 
   const handleReserva = async (e) => {
     e.preventDefault();
@@ -41,27 +47,26 @@ const ReservaInfo = ({ alojamiento, user }) => {
     setLoading(true);
     
     const nuevaReserva = {
-      huespedReservador:'682c981661bd44f5f10789b0',
       alojamiento,
       rangoFechaInicio: fechaInicio,
       rangoFechaFinal:fechaFin,
       cantHuespedes: huespedes,
       precioTotal: calcularPrecioTotal(),
       fechaReserva: new Date().toISOString(),
-      usuarioId: user.id,
-      direccion: alojamiento.direccion,
     };
 
 try {
    const res = await axios.post("/reservas",
        nuevaReserva
     )
-     
+     console.log(res.data)
     //FALTARIA MANEJO DE ERRORES
+
+    const reservaId = res.data.id
 
       setLoading(false);
       alert("¡Reserva realizada con éxito!");
-      navigate.push("/reservas");
+      navigate.push(`/reservas/${reservaId}`);
 
 
 } catch (error) {
@@ -108,29 +113,13 @@ try {
 
         <form onSubmit={handleReserva} className="reserva-form">
           <div className="form-row">
-            {/* <div className="form-group">
-              <label>Fecha de entrada</label>
-              <input
-                type="date"
-                value={fechaInicio}
-                onChange={(e) => setFechaInicio(e.target.value)}
-                min={new Date().toISOString().split("T")[0]}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label>Fecha de salida</label>
-              <input
-                type="date"
-                value={fechaFin}
-                onChange={(e) => setFechaFin(e.target.value)}
-                min={fechaInicio || new Date().toISOString().split("T")[0]}
-                required
-              />
-            </div> */}
             <div className="form-group">
 
-            <SelectorFecha/>
+            <SelectorFecha
+            changeFechaInicio={setFechaInicio}
+            changeFechafin={setFechaFin}
+            diasNoDisponibles={alojamiento.fechasOcupadas}
+            />
             </div>
           </div>
 
@@ -171,13 +160,6 @@ try {
               </a> para hacer una reserva
             </p>
           ) : (
-            // <button
-            //   type="submit"
-            //   className="reservar-button"
-            //   disabled={loading}
-            // >
-            //   {loading ? "Procesando..." : "Reservar ahora"}
-            // </button>
             <Button type="submit" variant="filled" color="indigo" radius="lg">
                 {loading ? "Procesando..." : "Reservar ahora"}
             </Button>

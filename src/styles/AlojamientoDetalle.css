@@ -126,6 +126,7 @@
 
 .reserva-sidebar {
   position: sticky;
+  width: 40%;
   top: 100px;
 }
 
@@ -262,6 +263,7 @@
   }
 
   .reserva-sidebar {
-    position: static;
+    position: static;  
+   width: 100%;
   }
 }

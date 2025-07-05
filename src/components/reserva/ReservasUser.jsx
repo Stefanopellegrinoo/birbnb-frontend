@@ -1,7 +1,10 @@
+import api from '@/lib/api'
 import React, { useEffect, useState } from 'react'
 
 const ReservasUser = ({reservas, user, onChange}) => {
-  
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false)
+  const [message, setMessage] = useState("")
 
     const formatearFecha = (fecha) => {
       return new Date(fecha).toLocaleDateString("es-ES", {
@@ -17,14 +20,18 @@ const ReservasUser = ({reservas, user, onChange}) => {
       return Math.ceil((fin - inicio) / (1000 * 60 * 60 * 24))
     }
   
-    const cancelarReserva = (reservaId) => {
+    const cancelarReserva = async (reservaId) => {
       if (window.confirm("¿Estás seguro de que quieres cancelar esta reserva?")) {
-        const todasLasReservas = JSON.parse(localStorage.getItem("reservas") || "[]")
-        const reservasActualizadas = todasLasReservas.filter((reserva) => reserva.id !== reservaId)
-        localStorage.setItem("reservas", JSON.stringify(reservasActualizadas))
+      
+
+        try {
+          const response = await api.patch(`/reservas/${reservaId}/cancelacion`); 
+          const reservasActualizadas = reservas.filter((reserva) => reserva.id !== reservaId)
   
-        const reservasDelUsuario = reservasActualizadas.filter((reserva) => reserva.usuarioId === user.id)
-        onChange(reservasDelUsuario)
+        onChange(reservasActualizadas)
+        } catch (error) {
+          console.log(error)
+        }
       }
     }
 
