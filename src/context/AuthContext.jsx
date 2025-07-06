@@ -44,7 +44,7 @@ export function AuthProvider({ children }) {
             console.log(res);
             const userData = res.data;
             setUser(userData.user);
-            localStorage.setItem("token", JSON.stringify(userData.accessToken));
+            localStorage.setItem("token", userData.accessToken);
             return true;
         } catch (error) {
             console.log(error);
