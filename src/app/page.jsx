@@ -3,7 +3,6 @@ import Link from "next/link";
 import "@/styles/Home.css"; 
 import { Presentacion } from "@/components/home/Presentacion";
 import AlojamientosDestacados from "@/components/home/AlojamientosDestacados";
-
 function Home() {
 
   return (

@@ -1,16 +1,14 @@
 'use client'
-
-import Navbar from "@/components/layout/Navbar";
+import "@/styles/globals.css";
 import { Footer } from "../footer/Footer";
 import Header from "../header/Header";
 
 export default function ClientLayout({ children }) {
   return (
-    <>
+    <div className="layout-root">
       <Header />
-      <main>{children}</main>
+      <main className="layout-main">{children}</main>
       <Footer />
-
-    </>
+    </div>
   );
 }
