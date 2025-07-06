@@ -51,16 +51,19 @@ export function AuthProvider({ children }) {
         }
     };
 
-    const register = async (email, password, name) => {
+    const register = async (email, password, name,tipo) => {
         const u = {
             email,
             nombre: name,
             password,
+            tipo
         };
         try {
+            console.log(u)
             const res = await api.post("/register", {
                 user: u,
             });
+            
             const userData = res.user;
             setUser(userData);
             localStorage.setItem("user", JSON.stringify(userData));

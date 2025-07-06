@@ -1,127 +1,127 @@
-"use client"
-
-import { useState } from "react"
+"use client";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useAuth } from "../../../context/AuthContext"
-import "../../../styles/Register.css"
-
-
+import { TextInput, PasswordInput, Select, Text } from "@mantine/core";
+import { useAuth } from "../../../context/AuthContext";
+import { Form } from "../../../components/form/Form";
 
 function Register() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  })
-  const [error, setError] = useState("")
-  const { register } = useAuth()
-  const router = useRouter()
+    const [formData, setFormData] = useState({
+        name: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        tipo: "huesped",
+    });
+    const [error, setError] = useState("");
+    const { register } = useAuth();
+    const router = useRouter();
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    })
-  }
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({ ...prev, [name]: value }));
+    };
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    setError("")
+    const handleSelectChange = (value) => {
+        setFormData((prev) => ({ ...prev, tipo: value }));
+    };
 
-    if (!formData.name || !formData.email || !formData.password || !formData.confirmPassword) {
-      setError("Por favor completa todos los campos")
-      return
-    }
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError("");
 
-    if (formData.password !== formData.confirmPassword) {
-      setError("Las contraseñas no coinciden")
-      return
-    }
+        const { name, email, password, confirmPassword, tipo } = formData;
+        console.log(formData)
+        if (!name || !email || !password || !confirmPassword || !tipo) {
+            setError("Por favor completa todos los campos");
+            return;
+        }
 
-    if (formData.password.length < 6) {
-      setError("La contraseña debe tener al menos 6 caracteres")
-      return
-    }
+        if (password !== confirmPassword) {
+            setError("Las contraseñas no coinciden");
+            return;
+        }
 
-    const success = register(formData.email, formData.password, formData.name)
-    if (success) {
-      router.push("/")
-    } else {
-      setError("Error al crear la cuenta")
-    }
-  }
+        if (password.length < 6) {
+            setError("La contraseña debe tener al menos 6 caracteres");
+            return;
+        }
 
-  return (
-    <div className="register">
-      <div className="register-container">
-        <div className="register-form">
-          <h2>Crear Cuenta</h2>
+        const success = await register(email, password, name, tipo);
+        if (success) {
+            router.push("/");
+        } else {
+            setError("Error al crear la cuenta");
+        }
+    };
 
-          {error && <div className="error-message">{error}</div>}
-
-          <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label htmlFor="name">Nombre completo</label>
-              <input
-                type="text"
-                id="name"
+    return (
+        <Form
+            title="Crear Cuenta"
+            onSubmit={handleSubmit}
+            error={error}
+            submitLabel="Registrarse"
+        >
+            <TextInput
+                label="Nombre completo"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
                 placeholder="Tu nombre completo"
-              />
-            </div>
+                required
+                mt="sm"
+            />
 
-            <div className="form-group">
-              <label htmlFor="email">Email</label>
-              <input
-                type="email"
-                id="email"
+            <TextInput
+                label="Email"
                 name="email"
+                type="email"
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="tu@email.com"
-              />
-            </div>
+                required
+                mt="md"
+            />
+            <Select
+                label="Tipo de usuario"
+                data={[
+                    { value: "huesped", label: "Huésped" },
+                    { value: "anfitrion", label: "Anfitrión" },
+                ]}
+                value={formData.tipo}
+                onChange={handleSelectChange}
+                placeholder="Selecciona una opción"
+                required
+                mt="md"
+            />
 
-            <div className="form-group">
-              <label htmlFor="password">Contraseña</label>
-              <input
-                type="password"
-                id="password"
+            <PasswordInput
+                label="Contraseña"
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="Mínimo 6 caracteres"
-              />
-            </div>
+                required
+                mt="md"
+            />
 
-            <div className="form-group">
-              <label htmlFor="confirmPassword">Confirmar contraseña</label>
-              <input
-                type="password"
-                id="confirmPassword"
+            <PasswordInput
+                label="Confirmar contraseña"
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 placeholder="Repite tu contraseña"
-              />
-            </div>
+                required
+                mt="md"
+            />
 
-            <button type="submit" className="submit-button">
-              Crear Cuenta
-            </button>
-          </form>
-
-          <p className="auth-link">
-            ¿Ya tienes cuenta? <Link href="/auth/login">Inicia sesión aquí</Link>
-          </p>
-        </div>
-      </div>
-    </div>
-  )
+            <Text ta="center" mt="md">
+                ¿Ya tienes cuenta?{" "}
+                <Link href="/auth/login">Inicia sesión aquí</Link>
+            </Text>
+        </Form>
+    );
 }
 
-export default Register
+export default Register;
