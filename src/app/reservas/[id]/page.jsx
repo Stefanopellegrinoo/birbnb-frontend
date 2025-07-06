@@ -1,37 +1,42 @@
 "use client"
 
-import { useRouter } from 'next/router';
+import api from '@/lib/api';
+import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 const DetalleReserva = () => {
   const router = useRouter();
-  const { id } = router.query; 
+  const { id } =  useParams(); 
   const [reserva, setReserva] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  const fetchReserva = async () => {
+    try {
+      setLoading(true);
+      const response = await api.get(`/reservas/${id}`); 
+      console.log(response)
+
+      const data = response.data
+
+      // if (!response.ok) {
+      //   throw new Error('Reserva no encontrada');
+      // }
+      setReserva(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (id) {
-      const fetchReserva = async () => {
-        try {
-          setLoading(true);
-          const response = await fetch(`/reservas/${id}`); 
-          if (!response.ok) {
-            throw new Error('Reserva no encontrada');
-          }
-          const data = await response.json();
-          setReserva(data);
-        } catch (err) {
-          setError(err.message);
-        } finally {
-          setLoading(false);
-        }
-      };
       fetchReserva();
     }
   }, [id]);
 
-  if (loading) {
+  if (!loading) {
     return <p>Cargando detalles de la reserva...</p>;
   }
 

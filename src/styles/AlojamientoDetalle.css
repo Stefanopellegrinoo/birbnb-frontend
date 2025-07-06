@@ -126,11 +126,13 @@
 
 .reserva-sidebar {
   position: sticky;
+  width: 40%;
   top: 100px;
 }
 
 .reserva-card {
   background: white;
+  width: 100%;
   border: 1px solid #e5e7eb;
   border-radius: 12px;
   padding: 24px;
@@ -163,8 +165,8 @@
 
 .form-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  /* grid-template-columns: 1fr 1fr;
+  gap: 12px; */
 }
 
 .form-group {
@@ -261,6 +263,7 @@
   }
 
   .reserva-sidebar {
-    position: static;
+    position: static;  
+   width: 100%;
   }
 }

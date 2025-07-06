@@ -1,28 +1,39 @@
-"use client"
+"use client";
 
-import api from "@/lib/api"
-import { createContext, useContext, useState, useEffect } from "react"
+import api from "@/lib/api";
+import { createContext, useContext, useState, useEffect } from "react";
 
-const AuthContext = createContext()
+const AuthContext = createContext();
 
 export function useAuth() {
-  return useContext(AuthContext)
+  return useContext(AuthContext);
 }
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('')
 
   useEffect(() => {
-    const savedUser = localStorage.getItem("user")
-    if (savedUser) {
-      setUser(JSON.parse(savedUser))
-    }
-    setLoading(false)
-  }, [])
 
+    const initAuth = async () => {
+      try {
+        const user = await api.get("/me");;
+        setUser(user);
+      } catch (err) {
+        console.error('Error al cargar usuario:', err);
+        setError(err.message || 'Error inesperado');
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    initAuth();
+  }, []);
+
+  // Simulación de login
   const login = async (email, password) => {
-    // Simulación de login
 
     const u = {
       email,
@@ -42,37 +53,50 @@ export function AuthProvider({ children }) {
   }
    
   }
+      password,
+    };
+    try {
+      const res = await api.post("/login", {
+        user: u,
+      });
+      const userData = res.data;
+      setUser(userData.user);
+      localStorage.setItem("token", userData.accessToken);
+
+      return true;
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const register = async (email, password, name) => {
-    // Simulación de registro
 
-        const u = {
+    const u = {
       email,
       nombre: name,
-      password
+      password,
+    };
+    try {
+      const res = await api.post("/register", {
+        user: u,
+      });
+      const userData = res.user;
+      setUser(userData);
+      localStorage.setItem("user", JSON.stringify(userData));
+      return true;
+    } catch (error) {
+      console.log(error);
     }
-try {
-   const res = await api.post("/register",{
-        user: u
-    })    
-    console.log(res)
-    const userData = res.user
-    setUser(userData)
-    localStorage.setItem("user", JSON.stringify(userData))
-    return true
-} catch (error) {
-  console.log(error)
-}
-    const userData = { id: Date.now(), email, name }
-    setUser(userData)
-    localStorage.setItem("user", JSON.stringify(userData))
-    return true
-  }
+    const userData = { id: Date.now(), email, name };
+    setUser(userData);
+    localStorage.setItem("user", JSON.stringify(userData));
+    return true;
+  };
 
   const logout = () => {
-    setUser(null)
-    localStorage.removeItem("user")
-  }
+    setUser(null);
+    localStorage.removeItem("token");
+  };
 
   const value = {
     user,
@@ -80,7 +104,11 @@ try {
     register,
     logout,
     loading,
-  }
+  };
 
-  return <AuthContext.Provider value={value}>{!loading && children}</AuthContext.Provider>
+  return (
+    <AuthContext.Provider value={value}>
+      {!loading && children}
+    </AuthContext.Provider>
+  );
 }
