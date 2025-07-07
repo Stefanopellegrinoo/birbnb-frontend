@@ -17,7 +17,8 @@ export function AuthProvider({ children }) {
     useEffect(() => {
         const initAuth = async () => {
             try {
-                const user = await api.get("/me");
+                const res = await api.get("/me");
+                const user = res.data;
                 setUser(user);
             } catch (err) {
                 console.error("Error al cargar usuario:", err);

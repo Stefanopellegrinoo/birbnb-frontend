@@ -44,7 +44,6 @@ export default function Header() {
     };
 
     useEffect(() => {
-        console.log(user)
         if (!user) {
             setNotificaciones([]);
             setTieneNotificacionesNuevas(false);
@@ -57,7 +56,8 @@ export default function Header() {
 
             return;
         }
-        const endpointNotificacionesNoLeidas = `/usuarios/${user.id}/notificaciones/no-leidas`;
+        const userId = user.id
+        const endpointNotificacionesNoLeidas = `/usuarios/${userId}/notificaciones/no-leidas`;
         axios
             .get(endpointNotificacionesNoLeidas)
             .then((res) => {
