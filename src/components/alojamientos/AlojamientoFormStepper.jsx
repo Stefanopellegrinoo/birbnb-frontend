@@ -14,6 +14,7 @@ import {
     Box,
     MultiSelect,
 } from "@mantine/core";
+import { getTimeRange, TimePicker } from '@mantine/dates';
 import SelectorUbicacion from "./SelectorUbicacion";
 import api from "@/lib/api";
 import MultipleFiles from "../ui/MultipleFiles";
@@ -98,7 +99,7 @@ export default function AlojamientoFormStepper() {
     };
 
     return (
-        <Box sx={{ minHeight: 500 }}>
+        <Box >
             <Card shadow="sm" padding="lg" mih={500}>
                 {" "}
                 {/* altura fija */}
@@ -109,10 +110,7 @@ export default function AlojamientoFormStepper() {
                 >
                     <Stepper.Step label="Datos básicos">
                         <Stack
-                            sx={{
-                                minHeight: 300,
-                                justifyContent: "space-between",
-                            }}
+
                         >
                             <TextInput
                                 label="Nombre"
@@ -152,34 +150,31 @@ export default function AlojamientoFormStepper() {
                                 />
                             </Group>
                             <Group grow>
-                                <TextInput
-                                    label="Check-in"
+                                  <TimePicker
+                                  label="Check-in"
+                                   withDropdown
                                     value={formData.horarioChkIn}
-                                    onChange={(e) =>
-                                        handleChange("horarioChkIn")(
-                                            e.currentTarget.value
-                                        )
+                                   presets={getTimeRange({ startTime: '06:00:00', endTime: '11:00:00', interval: '01:00:00' })}
+                                    onChange={
+                                        handleChange("horarioChkIn")
                                     }
-                                />
-                                <TextInput
-                                    label="Check-out"
+                                   />
+                                 <TimePicker
+                                  label="Check-out"
+                                   withDropdown
+                                   presets={getTimeRange({ startTime: '06:00:00', endTime: '23:00:00', interval: '01:00:00' })}
                                     value={formData.horarioChkOut}
-                                    onChange={(e) =>
-                                        handleChange("horarioChkOut")(
-                                            e.currentTarget.value
-                                        )
+
+                                           onChange={
+                                        handleChange("horarioChkOut")
                                     }
-                                />
+                                   />
                             </Group>
                         </Stack>
                     </Stepper.Step>
 
                     <Stepper.Step label="Dirección">
                         <Stack
-                            sx={{
-                                minHeight: 300,
-                                justifyContent: "space-between",
-                            }}
                         >
                             <Divider label="Dirección" />
                             <SelectorUbicacion onSeleccion={setUbicacion} />
