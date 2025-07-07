@@ -13,7 +13,7 @@ function Login() {
     const { login } = useAuth();
     const router = useRouter();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
 
@@ -22,7 +22,8 @@ function Login() {
             return;
         }
 
-        const success = login(email, password);
+        const success = await login(email, password);
+        console.log(success)
         if (success) {
             router.push("/");
         } else {

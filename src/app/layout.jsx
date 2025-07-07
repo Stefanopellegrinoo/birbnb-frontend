@@ -1,6 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import { AuthProvider } from "@/context/AuthContext";
 import '@mantine/core/styles.css';
+import '@mantine/dates/styles.css';
 import ClientLayout from "@/components/layout/ClientLayout";
 
 import { ColorSchemeScript, MantineProvider, mantineHtmlProps } from '@mantine/core';

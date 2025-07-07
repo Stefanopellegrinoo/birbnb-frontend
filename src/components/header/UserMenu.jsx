@@ -6,7 +6,7 @@ export default function UserMenu({ user, handleLogout }) {
         <>
             {user ? (
                 <>
-                    {user.tipo === "anfitrion" ? (
+                    {user.data.tipo === "anfitrion" ? (
                     <>
                         <Link
                             href="/alojamientos/create"
