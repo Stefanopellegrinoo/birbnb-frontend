@@ -3,16 +3,8 @@
 import {
     Box,
     Burger,
-    Button,
-    Divider,
-    Drawer,
     Group,
-    ScrollArea,
-    Text,
-    Flex,
     Title,
-    Menu,
-    ActionIcon,
 } from "@mantine/core";
 import { useEffect, useState, useRef } from "react";
 import { useDisclosure } from "@mantine/hooks";
@@ -26,6 +18,7 @@ import { useRouter } from "next/navigation";
 import NotificationsMenu from "./NotificationsMenu";
 import MainNav from "./MainNav";
 import UserMenu from "./UserMenu";
+import DrawerHeader from "./DrawerHeader";
 
 export default function Header() {
     const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
@@ -48,7 +41,6 @@ export default function Header() {
             setNotificaciones([]);
             setTieneNotificacionesNuevas(false);
 
-            // Desconectar socket si existe
             if (socketRef.current) {
                 socketRef.current.disconnect();
                 socketRef.current = null;
@@ -56,7 +48,7 @@ export default function Header() {
 
             return;
         }
-        const userId = user.id
+        const userId = user.id;
         const endpointNotificacionesNoLeidas = `/usuarios/${userId}/notificaciones/no-leidas`;
         axios
             .get(endpointNotificacionesNoLeidas)
@@ -127,63 +119,13 @@ export default function Header() {
                     />
                 </Group>
             </header>
-
-            <Drawer
+            <DrawerHeader
                 opened={drawerOpened}
-                onClose={closeDrawer}
-                size="100%"
-                padding="md"
-                hiddenFrom="sm"
-                zIndex={1000000}
-            >
-                <ScrollArea h="calc(100vh - 80px)" mx="-md">
-                    <Flex justify="center" mb="md">
-                        <Title order={2} className={classes.title}>
-                            Navegacion
-                        </Title>
-                    </Flex>
-
-                    <Divider my="sm" />
-                    <Link
-                        href="/"
-                        className={classes.link}
-                        onClick={closeDrawer}
-                    >
-                        Home
-                    </Link>
-                    <Link
-                        href="/alojamientos"
-                        className={classes.link}
-                        onClick={closeDrawer}
-                    >
-                        Alojamientos
-                    </Link>
-                    <Link
-                        href="/notificaciones"
-                        className={classes.link}
-                        onClick={closeDrawer}
-                    >
-                        Notificaciones
-                    </Link>
-                    <Divider my="sm" />
-                    <Group justify="center" grow pb="xl" px="md">
-                        <Link
-                            href="/auth/login"
-                            className="navbar-button"
-                            onClick={closeDrawer}
-                        >
-                            <Button variant="default">Login</Button>
-                        </Link>
-                        <Link
-                            href="/auth/register"
-                            className="navbar-button navbar-button-secondary"
-                            onClick={closeDrawer}
-                        >
-                            <Button>Registrar</Button>
-                        </Link>
-                    </Group>
-                </ScrollArea>
-            </Drawer>
+                closeDrawer={closeDrawer}
+                classes={classes}
+                handleLogout={handleLogout}
+                user={user}
+            ></DrawerHeader>
         </Box>
     );
 }
