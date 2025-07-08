@@ -1,33 +1,63 @@
 import { useEffect, useState } from 'react';
-import { FileButton, Button, Group, Text } from '@mantine/core';
+import { FileButton, Button, Group, ActionIcon, SimpleGrid, Image as MantineImage,   } from '@mantine/core';
+import { IconTrash } from '@tabler/icons-react';
+const MultipleFiles = ({initialPhotos = [], onChange}) => {
+     const [photos, setPhotos] = useState(initialPhotos);
 
-const MultipleFiles = ({onChange}) => {
- const [files, setFiles] = useState([]);
+  useEffect(() => {
+    onChange(photos);
+  }, [photos, onChange]);
 
-    useEffect(()=>{
-        onChange(files)
-    }, [files])
+  const removePhoto = (idx) => {
+    setPhotos((prev) => prev.filter((_, i) => i !== idx));
+  };
 
+  const addFiles = (fileList) => {
+    if (!fileList) return;
+    const arr = Array.from(fileList);
+    setPhotos((prev) => [...prev, ...arr]);
+  };
 
   return (
     <>
-      <Group justify="center">
-        <FileButton onChange={setFiles} accept="image/png,image/jpeg" multiple>
-          {(props) => <Button {...props}>Upload image</Button>}
-        </FileButton>
-      </Group>
+      <SimpleGrid cols={3} spacing="sm">
+        {photos.map((item, idx) => {
+          const src =
+            typeof item === 'string'
+              ? `http://localhost:3000/images/${item}`
+              : URL.createObjectURL(item);
+          return (
+            <div key={idx} style={{ position: 'relative' }}>
+              <MantineImage
+                src={src}
+                alt={`Foto ${idx + 1}`}
+                
+                maw={200}
+                mah={100}
+                fit="cover"
+                withPlaceholder
+              />
+              <ActionIcon
+                color="red"
+                size="sm"
+                variant="filled"
+                onClick={() => removePhoto(idx)}
+                sx={{ position: 'absolute', top: 5, right: 5 }}
+              >
+                <IconTrash size={16} />
+              </ActionIcon>
+            </div>
+          );
+        })}
+      </SimpleGrid>
 
-      {files.length > 0 && (
-        <Text size="sm" mt="sm">
-          Picked files:
-        </Text>
-      )}
-
-      <ul>
-        {files.map((file, index) => (
-          <li key={index}>{file.name}</li>
-        ))}
-      </ul>
+      <FileButton multiple accept="image/*" onChange={addFiles}>
+        {(props) => (
+          <Button mt="sm" {...props} fullWidth>
+            Agregar fotos
+          </Button>
+        )}
+      </FileButton>
     </>
   );
 }

@@ -21,7 +21,7 @@ const AlojamientoFotos = ({alojamiento}) => {
 >
   {(alojamiento.fotos?.length > 0
     ? alojamiento.fotos
-    : ["/file.svg?height=400&width=600", "/file.svg?height=400&width=600"] // imagen por defecto
+    : ["/file.svg?height=400&width=600", "/file.svg?height=400&width=600", "/file.svg?height=400&width=600", "/file.svg?height=400&width=600"] // imagen por defecto
   ).map((a, i) => (
     <Carousel.Slide key={i}>
       <Img

@@ -81,7 +81,6 @@ export default function AlojamientoFormStepper() {
             caracteristicas: formData.caracteristicas,
             fotos: fotos,
         };
-        console.log(payload);
 
         try {
             const res = await api.post("/alojamientos", payload);

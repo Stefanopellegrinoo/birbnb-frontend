@@ -1,12 +1,19 @@
 import { Card, Image, Text, Group, Badge, Stack } from '@mantine/core';
 import Link from 'next/link';
 
-export function AlojamientoCard({ alojamiento }){
+export function AlojamientoCard({ alojamiento, edit }){
   const imageUrl = alojamiento.fotos?.[0]
     ? `http://localhost:3000/images/${alojamiento.fotos[0]}`
     : '/file.svg';
+
+      const href = edit
+    ? `/alojamientos/misAlojamientos/${alojamiento.id}`
+    : `/alojamientos/${alojamiento.id}
+    `
+    const targetAttr = edit ? undefined : '_blank';
+
   return (
-        <Link key={alojamiento.id} href={`/alojamientos/${alojamiento.id}`} className="alojamiento-card">
+        <Link key={alojamiento.id} href={href} passHref target={targetAttr} className="alojamiento-card">
             <img
               src={
                 alojamiento.fotos?.[0]
