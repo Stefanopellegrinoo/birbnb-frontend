@@ -25,6 +25,7 @@ const ReservasUser = ({reservas, user, onChange}) => {
       
 
         try {
+          console.log(reservaId)
           const response = await api.patch(`/reservas/${reservaId}/cancelacion`); 
           const reservasActualizadas = reservas.filter((reserva) => reserva.id !== reservaId)
   
@@ -53,28 +54,28 @@ const ReservasUser = ({reservas, user, onChange}) => {
                   <div className="detail-item">
                     <span className="label">Fechas:</span>
                     <span>
-                      {formatearFecha(reserva.fechaInicio)} - {formatearFecha(reserva.fechaFin)}
+                      {formatearFecha(reserva.rangoFechas.fechaInicio)} - {formatearFecha(reserva.rangoFechas.fechaFin)}
                     </span>
                   </div>
 
                   <div className="detail-item">
                     <span className="label">Duración:</span>
                     <span>
-                      {calcularDias(reserva.fechaInicio, reserva.fechaFin)} noche
-                      {calcularDias(reserva.fechaInicio, reserva.fechaFin) !== 1 ? "s" : ""}
+                      {calcularDias(reserva.rangoFechas.fechaInicio, reserva.rangoFechas.fechaFin)} noche
+                      {calcularDias(reserva.rangoFechas.fechaInicio, reserva.rangoFechas.fechaFin) !== 1 ? "s" : ""}
                     </span>
                   </div>
 
                   <div className="detail-item">
                     <span className="label">Huéspedes:</span>
                     <span>
-                      {reserva.huespedes} persona{reserva.huespedes !== 1 ? "s" : ""}
+                      {reserva.cantHuespedes} persona{reserva.cantHuespedes !== 1 ? "s" : ""}
                     </span>
                   </div>
 
                   <div className="detail-item">
                     <span className="label">Reservado el:</span>
-                    <span>{formatearFecha(reserva.fechaReserva)}</span>
+                    <span>{formatearFecha(reserva.fechaAlta)}</span>
                   </div>
                 </div>
               </div>
@@ -82,12 +83,14 @@ const ReservasUser = ({reservas, user, onChange}) => {
               <div className="reserva-actions">
                 <div className="precio-total">
                   <span className="total-label">Total pagado</span>
-                  <span className="total-amount">${reserva.precioTotal}</span>
+                  <span className="total-amount">${reserva.precioPorNoche}</span>
                 </div>
 
-                <button onClick={() => cancelarReserva(reserva.id)} className="cancel-button">
-                  Cancelar reserva
-                </button>
+                {reserva.estadoReserva !== 'cancelada' && reserva.estadoReserva !== 'confirmada' && (
+                  <button onClick={() => cancelarReserva(reserva.id)} className="cancel-button">
+                    Cancelar reserva
+                  </button>
+                )}
               </div>
             </div>
           ))}
