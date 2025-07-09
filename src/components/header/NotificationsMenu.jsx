@@ -1,6 +1,7 @@
-import { Menu, ActionIcon } from "@mantine/core";
+import { Menu, ActionIcon, Divider } from "@mantine/core";
 import { IconBell, IconBellFilled } from "@tabler/icons-react";
 import Link from "next/link";
+import NotificacionesTabs from "../ui/NotificacionesTabs";
 
 export default function NotificationsMenu({
     notificaciones,
@@ -34,15 +35,12 @@ export default function NotificationsMenu({
             </Menu.Target>
             <Menu.Dropdown>
                 <Menu.Label>Notificaciones</Menu.Label>
-                {ultimasNotificaciones.length === 0 ? (
-                    <Menu.Item disabled>
-                        No tienes notificaciones nuevas
-                    </Menu.Item>
-                ) : (
-                    ultimasNotificaciones.map((n) => (
-                        <Menu.Item key={n._id}>{n.mensaje}</Menu.Item>
-                    ))
-                )}
+                <Divider/>
+                 <NotificacionesTabs
+                   sinLeer={ultimasNotificaciones}
+                   leidas={ultimasNotificaciones}
+                 />
+               
                 <Menu.Divider />
                 <Menu.Item component={Link} href="/notificaciones">
                     Ver todas las notificaciones

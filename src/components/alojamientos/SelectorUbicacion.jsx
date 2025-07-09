@@ -1,16 +1,21 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useJsApiLoader, Autocomplete } from "@react-google-maps/api";
+import { TextInput } from "@mantine/core";
 
 const libraries = ["places"];
 
-export default function SelectorUbicacion({ onSeleccion }) {
-    const autocompleteRef = useRef(null);
+export default function SelectorUbicacion({ 
 
+   onSeleccion 
+
+}) {
+    const autocompleteRef = useRef(null);
     const { isLoaded, loadError } = useJsApiLoader({
         id: "places-autocomplete",
         googleMapsApiKey: "AIzaSyB83SPkJy1LtrcSRZvw6253FV3jIwPYSnw",
         libraries,
     });
+
 
     if (loadError) {
         return <div>Error cargando Google Maps: {loadError.message}</div>;
@@ -20,8 +25,8 @@ export default function SelectorUbicacion({ onSeleccion }) {
     }
 
     const handlePlaceChanged = () => {
-        const place = autocompleteRef.current.getPlace();
 
+        const place = autocompleteRef.current.getPlace();
         if (!place.geometry || !place.address_components) return;
 
         const getComponent = (type) => {
@@ -57,13 +62,15 @@ export default function SelectorUbicacion({ onSeleccion }) {
     return (
         <Autocomplete
             onLoad={(autocomplete) => (autocompleteRef.current = autocomplete)}
-            onPlaceChanged={handlePlaceChanged}
+            onPlaceChanged={handlePlaceChanged} 
         >
             <input
                 type="text"
                 placeholder="Ingresá tu dirección"
                 className="ubicacion-input"
+
             />
+       
         </Autocomplete>
     );
 }

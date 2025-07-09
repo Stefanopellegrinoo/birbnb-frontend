@@ -28,6 +28,8 @@ import {
 import { IconTrash } from '@tabler/icons-react';
 import MultipleFiles from "@/components/ui/MultipleFiles";
 import AlojamientoFotos from "@/components/alojamientos/alojamientoId/AlojamientoFotos";
+import api from "@/lib/api";
+import CamposBasicos from "@/components/alojamientos/alojamientoId/camposAlojamiento/CamposBasicos";
 
 // function PhotosEditor({ initialPhotos = [], onChange }) {
 //   const [photos, setPhotos] = useState(initialPhotos);
@@ -117,6 +119,8 @@ const page = () => {
   useEffect(() => {
     if (!alojamiento) return;
     console.log(alojamiento)
+    setFotos(alojamiento.fotos ?? [])
+
     form.setValues({
       nombre: alojamiento.nombre || '',
       descripcion: alojamiento.descripcion || '',
@@ -131,16 +135,22 @@ const page = () => {
       pais: alojamiento.direccion.ciudad.pais.nombre || '',
       caracteristicas: alojamiento.caracteristicas || [],
     });
-    setFotos(alojamiento.fotos || []);
+    console.log(alojamiento.fotos)
   }, [alojamiento]);
+
+  useEffect(() => {
+  if (alojamiento?.fotos) {
+    setFotos(alojamiento.fotos);   
+  }
+}, [alojamiento]);
 
   if (loading) return <LoaderUI />;
   if (error || !alojamiento) return <AlojamientoNoEncontrado />;
 
   const handleSubmit = async (values) => {
     try {
-      await axios.put(`/alojamientos/${id}`, { ...values, fotos });
-      router.push('/misAlojamientos');
+      await api.put(`/alojamientos/${id}`, { ...values, fotos });
+      //TODO NOTIFICACION GUARDADO
     } catch (err) {
       console.error('Error actualizando alojamiento', err);
     }
@@ -156,44 +166,9 @@ const page = () => {
           <Stack spacing="lg">
             {/* Datos básicos */}
             <Divider label="Datos básicos" />
-            <TextInput label="Nombre" {...form.getInputProps('nombre')} required />
-            <Textarea
-              label="Descripción"
-              autosize
-              minRows={3}
-              {...form.getInputProps('descripcion')}
-            />
-            <Group grow>
-              <NumberInput
-                label="Precio por noche"
-                {...form.getInputProps('precioPorNoche')}
-                precision={2}
-                required
-              />
-              <Select
-                label="Moneda"
-                data={['peso', 'dolar', 'euro']}
-                {...form.getInputProps('moneda')}
-              />
-              <NumberInput
-                label="Máx. huéspedes"
-                {...form.getInputProps('cantHuespedesMax')}
-                min={1}
-              />
-            </Group>
-            <Group grow>
-              <TextInput
-                label="Check-in"
-                placeholder="HH:MM"
-                {...form.getInputProps('horarioChkIn')}
-              />
-              <TextInput
-                label="Check-out"
-                placeholder="HH:MM"
-                {...form.getInputProps('horarioChkOut')}
-              />
-            </Group>
-
+          
+            <CamposBasicos form={form}/>
+          
             {/* Dirección */}
             <Divider label="Dirección" />
             <Group grow>
@@ -208,8 +183,8 @@ const page = () => {
             {/* Fotos */}
             <Divider label="Fotos" />
             <Group  sx={{ width: '100%', maxWidth: 640 }}>
-
              <MultipleFiles initialPhotos={fotos} onChange={setFotos} />
+             
             </Group>
 
             {/* Extras */}
