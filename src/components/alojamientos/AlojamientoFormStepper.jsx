@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     Stepper,
     Button,
@@ -14,18 +14,23 @@ import {
     Box,
     MultiSelect,
 } from "@mantine/core";
-import { getTimeRange, TimePicker } from '@mantine/dates';
+import { getTimeRange, TimePicker } from "@mantine/dates";
 import SelectorUbicacion from "./SelectorUbicacion";
 import api from "@/lib/api";
 import MultipleFiles from "../ui/MultipleFiles";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
+import CamposBasicos from "./alojamientoId/camposAlojamiento/CamposBasicos";
+import { useForm } from "@mantine/form";
+import Confirmacion from "./alojamientoId/camposAlojamiento/Confirmacion";
 
 export default function AlojamientoFormStepper() {
     const [active, setActive] = useState(0);
     const { user } = useAuth();
+    const router = useRouter();
+    const [error, setError] = useState("");
 
-    const [formData, setFormData] = useState({
+    const form = useForm({
         nombre: "",
         descripcion: "",
         precioPorNoche: 0,
@@ -34,53 +39,72 @@ export default function AlojamientoFormStepper() {
         horarioChkOut: "",
         cantHuespedesMax: 1,
         caracteristicas: [],
+        direccion: {
+            calle: "",
+            altura: "",
+            ciudad: "",
+            pais: "",
+            lat: "",
+            lon: "",
+        },
     });
-    const [error, setError] = useState("");
-    const router = useRouter();
     const [ubicacion, setUbicacion] = useState({
         calle: "",
         altura: "",
         ciudad: "",
+        provincia: "",
         pais: "",
-        lat: "",
-        lon: "",
+        lat: null,
+        lon: null,
     });
+    const [direccionInput, setDireccionInput] = useState("");
 
-    const [fotos, setFotos] = useState({});
+    const [fotos, setFotos] = useState([]);
 
     const nextStep = () => setActive((current) => Math.min(current + 1, 3));
     const prevStep = () => setActive((current) => Math.max(current - 1, 0));
 
-    const handleChange = (field) => (value) => {
-        setFormData((prev) => ({ ...prev, [field]: value }));
-    };
-
     const handleConfirm = async (e) => {
         e.preventDefault();
         const payload = {
-            usuarioAnfitrion: user.id,
-            nombre: formData.nombre,
-            descripcion: formData.descripcion,
-            precioPorNoche: Number(formData.precioPorNoche),
-            moneda: formData.moneda,
-            horarioChkIn: formData.horarioChkIn,
-            horarioChkOut: formData.horarioChkOut,
-            cantHuespedesMax: Number(formData.cantHuespedesMax),
+            ...form.values,
+            precioPorNoche: Number(form.values.precioPorNoche),
+            cantHuespedesMax: Number(form.values.cantHuespedesMax),
             direccion: {
                 calle: ubicacion.calle,
                 altura: Number(ubicacion.altura),
                 ciudad: {
                     nombre: ubicacion.ciudad,
-                    pais: {
-                        nombre: ubicacion.pais,
-                    },
+                    pais: { nombre: ubicacion.pais },
                 },
                 lat: parseFloat(ubicacion.lat),
                 lon: parseFloat(ubicacion.lon),
             },
-            caracteristicas: formData.caracteristicas,
-            fotos: fotos,
+            fotos,
         };
+        // const payload = {
+        //     nombre: formData.nombre,
+        //     descripcion: formData.descripcion,
+        //     precioPorNoche: Number(formData.precioPorNoche),
+        //     moneda: formData.moneda,
+        //     horarioChkIn: formData.horarioChkIn,
+        //     horarioChkOut: formData.horarioChkOut,
+        //     cantHuespedesMax: Number(formData.cantHuespedesMax),
+        //     direccion: {
+        //         calle: ubicacion.calle,
+        //         altura: Number(ubicacion.altura),
+        //         ciudad: {
+        //             nombre: ubicacion.ciudad,
+        //             pais: {
+        //                 nombre: ubicacion.pais,
+        //             },
+        //         },
+        //         lat: parseFloat(ubicacion.lat),
+        //         lon: parseFloat(ubicacion.lon),
+        //     },
+        //     caracteristicas: formData.caracteristicas,
+        //     fotos: fotos,
+        // };
 
         try {
             const res = await api.post("/alojamientos", payload);
@@ -98,7 +122,7 @@ export default function AlojamientoFormStepper() {
     };
 
     return (
-        <Box >
+        <Box>
             <Card shadow="sm" padding="lg" mih={500}>
                 {" "}
                 {/* altura fija */}
@@ -108,75 +132,18 @@ export default function AlojamientoFormStepper() {
                     allowNextStepsSelect={false}
                 >
                     <Stepper.Step label="Datos básicos">
-                        <Stack
-
-                        >
-                            <TextInput
-                                label="Nombre"
-                                value={formData.nombre}
-                                onChange={(e) =>
-                                    handleChange("nombre")(
-                                        e.currentTarget.value
-                                    )
-                                }
-                            />
-                            <Textarea
-                                label="Descripción"
-                                autosize
-                                value={formData.descripcion}
-                                onChange={(e) =>
-                                    handleChange("descripcion")(
-                                        e.currentTarget.value
-                                    )
-                                }
-                            />
-                            <Group grow>
-                                <NumberInput
-                                    label="Precio por noche"
-                                    value={formData.precioPorNoche}
-                                    onChange={handleChange("precioPorNoche")}
-                                />
-                                <Select
-                                    label="Moneda"
-                                    data={["peso", "dolar", "euro"]}
-                                    value={formData.moneda}
-                                    onChange={handleChange("moneda")}
-                                />
-                                <NumberInput
-                                    label="Máx. huéspedes"
-                                    value={formData.cantHuespedesMax}
-                                    onChange={handleChange("cantHuespedesMax")}
-                                />
-                            </Group>
-                            <Group grow>
-                                  <TimePicker
-                                  label="Check-in"
-                                   withDropdown
-                                    value={formData.horarioChkIn}
-                                   presets={getTimeRange({ startTime: '06:00:00', endTime: '11:00:00', interval: '01:00:00' })}
-                                    onChange={
-                                        handleChange("horarioChkIn")
-                                    }
-                                   />
-                                 <TimePicker
-                                  label="Check-out"
-                                   withDropdown
-                                   presets={getTimeRange({ startTime: '06:00:00', endTime: '23:00:00', interval: '01:00:00' })}
-                                    value={formData.horarioChkOut}
-
-                                           onChange={
-                                        handleChange("horarioChkOut")
-                                    }
-                                   />
-                            </Group>
+                        <Stack>
+                            <CamposBasicos form={form} />
                         </Stack>
                     </Stepper.Step>
 
                     <Stepper.Step label="Dirección">
-                        <Stack
-                        >
+                        <Stack>
                             <Divider label="Dirección" />
-                            <SelectorUbicacion onSeleccion={setUbicacion} />
+                            <SelectorUbicacion
+            
+                                onSeleccion={setUbicacion}
+                            />
                         </Stack>
                     </Stepper.Step>
 
@@ -184,42 +151,30 @@ export default function AlojamientoFormStepper() {
                         <Stack>
                             <Divider label="Extras" />
                             <MultiSelect
-                                label="Características del Alojamiento"
+                                label="Características"
                                 data={[
                                     "wifi",
                                     "estacionamiento",
                                     "mascotas_permitidas",
                                     "piscina",
                                 ]}
-                                value={formData.caracteristicas}
-                                onChange={handleChange("caracteristicas")}
+                                {...form.getInputProps("caracteristicas")}
                                 clearable
                             />
-                            <MultipleFiles onChange={setFotos} />
+                            <MultipleFiles
+                                initialPhotos={fotos}
+                                onChange={setFotos}
+                            />
                         </Stack>
                     </Stepper.Step>
 
                     <Stepper.Step label="Confirmación">
                         <Stack spacing="xs">
-                            <Text weight={500}>
-                                Por favor verifica los datos:
-                            </Text>
-                            {Object.entries(formData).map(([key, val]) => (
-                                <Group key={key} noWrap>
-                                    <Text
-                                        size="sm"
-                                        style={{
-                                            flex: 1,
-                                            textTransform: "capitalize",
-                                        }}
-                                    >
-                                        {key.replace(/([A-Z])/g, " $1")}:
-                                    </Text>
-                                    <Text size="sm" style={{ flex: 2 }}>
-                                        {String(val)}
-                                    </Text>
-                                </Group>
-                            ))}
+                            <Confirmacion
+                                formValues={form.values}
+                                ubicacion={ubicacion}
+                                fotos={fotos}
+                            />
                         </Stack>
                     </Stepper.Step>
                 </Stepper>
