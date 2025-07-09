@@ -17,12 +17,12 @@ export default function UserMenu({ user, handleLogout }) {
     return (
       <Group spacing="sm">
         <Link href="/auth/login" passHref>
-          <Button component="a" variant="default">
+          <Button variant="default">
             Login
           </Button>
         </Link>
         <Link href="/auth/register" passHref>
-          <Button component="a" variant="outline">
+          <Button variant="outline">
             Registrar
           </Button>
         </Link>

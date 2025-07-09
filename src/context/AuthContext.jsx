@@ -21,8 +21,6 @@ export function AuthProvider({ children }) {
                 const user = res.data;
                 setUser(user);
             } catch (err) {
-                console.error("Error al cargar usuario:", err);
-                setError(err.message || "Error inesperado");
                 setUser(null);
             } finally {
                 setLoading(false);

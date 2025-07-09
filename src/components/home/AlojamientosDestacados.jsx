@@ -17,7 +17,7 @@ const AlojamientosDestacados = () => {
           <CardSkeleton n={3}/>
         ) : (
           alojamientos?.map((alojamiento) => (
-            <AlojamientoCard alojamiento={alojamiento} />
+            <AlojamientoCard alojamiento={alojamiento} key={alojamiento.id} />
           ))
         )}
       </div>
