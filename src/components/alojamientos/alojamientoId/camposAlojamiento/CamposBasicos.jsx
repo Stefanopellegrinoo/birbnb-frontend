@@ -27,7 +27,7 @@ const CamposBasicos = ({ form }) => {
                 />
                 <Select
                     label="Moneda"
-                    data={["peso", "dolar", "euro"]}
+                    data={["peso", "dolar"]}
                     {...form.getInputProps("moneda")}
                 />
                 <NumberInput

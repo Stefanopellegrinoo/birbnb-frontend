@@ -29,6 +29,10 @@ function MisReservas() {
             const reservas = res.data;
             setReservas(reservas);
         } catch (err) {
+            const mensaje =
+        err.response?.data?.message ||
+        err.message ||
+        "No se pudieron obtener las reservas";
             setError(err.message);
         } finally {
             setLoading(false);

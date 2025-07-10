@@ -4,11 +4,14 @@ import React, { useState } from "react";
 import { formatearCaracteristicas, formatearPrecio } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { Button } from "@mantine/core";
+import { showNotification } from '@mantine/notifications';
+import { IconCheck, IconX } from '@tabler/icons-react';
 import axios from "@/lib/api";
 import ErrorAlert from "@/components/alert/ErrorAlert";
 import SelectorFecha from "@/components/ui/SelectorFecha";
 
 const ReservaInfo = ({ alojamiento, user }) => {
+
     const [fechaInicio, setFechaInicio] = useState("");
     const [fechaFin, setFechaFin] = useState("");
     const [huespedes, setHuespedes] = useState(1);
@@ -167,6 +170,6 @@ const ReservaInfo = ({ alojamiento, user }) => {
             )}
         </div>
     );
-};
+
 
 export default ReservaInfo;

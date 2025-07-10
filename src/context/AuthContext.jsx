@@ -2,6 +2,8 @@
 
 import api from "@/lib/api";
 import { createContext, useContext, useState, useEffect } from "react";
+import { showNotification } from '@mantine/notifications';
+import { IconCheck, IconX } from '@tabler/icons-react';
 
 const AuthContext = createContext();
 
@@ -37,17 +39,27 @@ export function AuthProvider({ children }) {
             password,
         };
         try {
-            const res = await api.post("/login", {
-                user: u,
-            });
-            const userData = res.data;
-            console.log(userData.user)
-            setUser(userData.user);
-            localStorage.setItem("token", userData.accessToken);
-            return true;
-        } catch (error) {
-            console.log(error);
-        }
+  const res = await api.post("/login", {
+    user: u,
+  });
+  const userData = res.data;
+  console.log(userData.user)
+  setUser(userData.user);
+  localStorage.setItem("token", userData.accessToken);
+  return true;
+} catch (error) {
+  const mensaje = error.response?.data?.message || "Error al iniciar sesión";
+
+  showNotification({
+    title: "Error de login",
+    message: mensaje,
+    color: "red",
+    icon: <IconX />,
+  });
+
+  return false;
+}
+
     };
 
     const register = async (email, password, name,tipo) => {
@@ -58,18 +70,25 @@ export function AuthProvider({ children }) {
             tipo
         };
         try {
-            console.log(u)
-            const res = await api.post("/register", {
-                user: u,
-            });
-            
-            const userData = res.user;
-            setUser(userData);
-            localStorage.setItem("user", JSON.stringify(userData));
-            return true;
-        } catch (error) {
-            console.log(error);
-        }
+  console.log(u)
+  const res = await api.post("/register", { user: u });
+  const userData = res.user;
+  setUser(userData);
+  localStorage.setItem("user", JSON.stringify(userData));
+  return true;
+} catch (error) {
+  const mensaje = error.response?.data?.message || "Error al registrarse";
+
+  showNotification({
+    title: "Error de registro",
+    message: mensaje,
+    color: "red",
+    icon: <IconX />,
+  });
+
+  return false;
+}
+
         const userData = { id: Date.now(), email, name };
         setUser(userData);
         localStorage.setItem("user", JSON.stringify(userData));

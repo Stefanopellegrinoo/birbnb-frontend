@@ -1,6 +1,13 @@
+
 import api from "@/lib/api";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+
+const ReservasUser = ({reservas, user, onChange}) => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false)
+  const [message, setMessage] = useState("")
+
 
 const ReservasUser = ({ reservas, user, onChange }) => {
     const [loading, setLoading] = useState(false);
@@ -36,6 +43,8 @@ const ReservasUser = ({ reservas, user, onChange }) => {
             }
         }
     };
+
+
 
     return (
         <div className="reservas-list">
