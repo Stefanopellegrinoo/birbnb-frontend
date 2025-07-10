@@ -12,7 +12,6 @@ import Loader from "@/components/ui/Loader";
 const MisAlojamientos = () => {
     const { alojamientos, loading, error } = useAlojamientoUser();
 
-    console.log(alojamientos);
 
     return (
         <div className="alojamientos">

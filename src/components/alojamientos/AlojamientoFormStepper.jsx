@@ -23,8 +23,8 @@ import { useAuth } from "@/context/AuthContext";
 import CamposBasicos from "./alojamientoId/camposAlojamiento/CamposBasicos";
 import { useForm } from "@mantine/form";
 import Confirmacion from "./alojamientoId/camposAlojamiento/Confirmacion";
-import { showNotification } from '@mantine/notifications';
-import { IconCheck, IconX } from '@tabler/icons-react';
+import { showNotification } from "@mantine/notifications";
+import { IconCheck, IconX } from "@tabler/icons-react";
 
 export default function AlojamientoFormStepper() {
     const [active, setActive] = useState(0);
@@ -84,134 +84,109 @@ export default function AlojamientoFormStepper() {
             },
             fotos,
         };
-        // const payload = {
-        //     nombre: formData.nombre,
-        //     descripcion: formData.descripcion,
-        //     precioPorNoche: Number(formData.precioPorNoche),
-        //     moneda: formData.moneda,
-        //     horarioChkIn: formData.horarioChkIn,
-        //     horarioChkOut: formData.horarioChkOut,
-        //     cantHuespedesMax: Number(formData.cantHuespedesMax),
-        //     direccion: {
-        //         calle: ubicacion.calle,
-        //         altura: Number(ubicacion.altura),
-        //         ciudad: {
-        //             nombre: ubicacion.ciudad,
-        //             pais: {
-        //                 nombre: ubicacion.pais,
-        //             },
-        //         },
-        //         lat: parseFloat(ubicacion.lat),
-        //         lon: parseFloat(ubicacion.lon),
-        //     },
-        //     caracteristicas: formData.caracteristicas,
-        //     fotos: fotos,
-        // };
 
         try {
-  const res = await api.post("/alojamientos", payload);
-  if (!res.ok) {
+            const res = await api.post("/alojamientos", payload);
+            if (!res.ok) {
                 console.log("Error al crear alojamiento:", res);
                 router.push("/alojamientos");
             }
-  const alojamientoCreado = res.data;
+            const alojamientoCreado = res.data;
 
-  showNotification({
-    title: "Alojamiento creado",
-    message: "Se creó correctamente el alojamiento.",
-    color: "green",
-    icon: <IconCheck />,
-  });
+            showNotification({
+                title: "Alojamiento creado",
+                message: "Se creó correctamente el alojamiento.",
+                color: "green",
+                icon: <IconCheck />,
+            });
 
-  router.push("/alojamientos");
-} catch (err) {
-  const mensajeError =
-    err.response?.data?.message || err.message || "Error inesperado al crear el alojamiento";
+            router.push("/alojamientos");
+        } catch (err) {
+            const mensajeError =
+                err.response?.data?.message ||
+                err.message ||
+                "Error inesperado al crear el alojamiento";
 
-  showNotification({
-    title: "Error al crear alojamiento",
-    message: mensajeError,
-    color: "red",
-    icon: <IconX />,
-  });
+            showNotification({
+                title: "Error al crear alojamiento",
+                message: mensajeError,
+                color: "red",
+                icon: <IconX />,
+            });
 
-  console.error("Error:", mensajeError);
-}
-
-
-    return (
-        <Box>
-            <Card shadow="sm" padding="lg" mih={500}>
-                {" "}
-                {/* altura fija */}
-                <Stepper
-                    active={active}
-                    onStepClick={setActive}
-                    allowNextStepsSelect={false}
-                >
-                    <Stepper.Step label="Datos básicos">
-                        <Stack>
-                            <CamposBasicos form={form} />
-                        </Stack>
-                    </Stepper.Step>
-
-                    <Stepper.Step label="Dirección">
-                        <Stack>
-                            <Divider label="Dirección" />
-                            <SelectorUbicacion
-            
-                                onSeleccion={setUbicacion}
-                            />
-                        </Stack>
-                    </Stepper.Step>
-
-                    <Stepper.Step label="Extras">
-                        <Stack>
-                            <Divider label="Extras" />
-                            <MultiSelect
-                                label="Características"
-                                data={[
-                                    "wifi",
-                                    "estacionamiento",
-                                    "mascotas_permitidas",
-                                    "piscina",
-                                ]}
-                                {...form.getInputProps("caracteristicas")}
-                                clearable
-                            />
-                            <MultipleFiles
-                                initialPhotos={fotos}
-                                onChange={setFotos}
-                            />
-                        </Stack>
-                    </Stepper.Step>
-
-                    <Stepper.Step label="Confirmación">
-                        <Stack spacing="xs">
-                            <Confirmacion
-                                formValues={form.values}
-                                ubicacion={ubicacion}
-                                fotos={fotos}
-                            />
-                        </Stack>
-                    </Stepper.Step>
-                </Stepper>
-                <Group position="apart" mt="xl">
-                    <Button
-                        variant="default"
-                        disabled={active === 0}
-                        onClick={prevStep}
+            console.error("Error:", mensajeError);
+        }
+    }
+        return (
+            <Box>
+                <Card shadow="sm" padding="lg" mih={500}>
+                    {" "}
+                    {/* altura fija */}
+                    <Stepper
+                        active={active}
+                        onStepClick={setActive}
+                        allowNextStepsSelect={false}
                     >
-                        Volver
-                    </Button>
-                    {active < 3 ? (
-                        <Button onClick={nextStep}>Siguiente</Button>
-                    ) : (
-                        <Button onClick={handleConfirm}>Confirmar</Button>
-                    )}
-                </Group>
-            </Card>
-        </Box>
-    );
-  }
-}
+                        <Stepper.Step label="Datos básicos">
+                            <Stack>
+                                <CamposBasicos form={form} />
+                            </Stack>
+                        </Stepper.Step>
+
+                        <Stepper.Step label="Dirección">
+                            <Stack>
+                                <Divider label="Dirección" />
+                                <SelectorUbicacion onSeleccion={setUbicacion} />
+                            </Stack>
+                        </Stepper.Step>
+
+                        <Stepper.Step label="Extras">
+                            <Stack>
+                                <Divider label="Extras" />
+                                <MultiSelect
+                                    label="Características"
+                                    data={[
+                                        "wifi",
+                                        "estacionamiento",
+                                        "mascotas_permitidas",
+                                        "piscina",
+                                    ]}
+                                    {...form.getInputProps("caracteristicas")}
+                                    clearable
+                                />
+                                <MultipleFiles
+                                    initialPhotos={fotos}
+                                    onChange={setFotos}
+                                />
+                            </Stack>
+                        </Stepper.Step>
+
+                        <Stepper.Step label="Confirmación">
+                            <Stack spacing="xs">
+                                <Confirmacion
+                                    formValues={form.values}
+                                    ubicacion={ubicacion}
+                                    fotos={fotos}
+                                />
+                            </Stack>
+                        </Stepper.Step>
+                    </Stepper>
+                    <Group position="apart" mt="xl">
+                        <Button
+                            variant="default"
+                            disabled={active === 0}
+                            onClick={prevStep}
+                        >
+                            Volver
+                        </Button>
+                        {active < 3 ? (
+                            <Button onClick={nextStep}>Siguiente</Button>
+                        ) : (
+                            <Button onClick={handleConfirm}>Confirmar</Button>
+                        )}
+                    </Group>
+                </Card>
+            </Box>
+        );
+    };
+
