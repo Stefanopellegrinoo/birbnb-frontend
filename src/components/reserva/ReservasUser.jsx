@@ -8,6 +8,7 @@ const ReservasUser = ({reservas, user, onChange}) => {
 
     const formatearFecha = (fecha) => {
       return new Date(fecha).toLocaleDateString("es-ES", {
+        timeZone: "UTC",
         year: "numeric",
         month: "long",
         day: "numeric",
@@ -22,10 +23,7 @@ const ReservasUser = ({reservas, user, onChange}) => {
   
     const cancelarReserva = async (reservaId) => {
       if (window.confirm("¿Estás seguro de que quieres cancelar esta reserva?")) {
-      
-
         try {
-          console.log(reservaId)
           const response = await api.patch(`/reservas/${reservaId}/cancelacion`); 
           const reservasActualizadas = reservas.filter((reserva) => reserva.id !== reservaId)
   
