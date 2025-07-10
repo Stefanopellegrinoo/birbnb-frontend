@@ -1,179 +1,172 @@
-'use client'
+"use client";
 
 import React, { useState } from "react";
 import { formatearCaracteristicas, formatearPrecio } from "@/lib/utils";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 import { Button } from "@mantine/core";
 import axios from "@/lib/api";
 import ErrorAlert from "@/components/alert/ErrorAlert";
 import SelectorFecha from "@/components/ui/SelectorFecha";
 
 const ReservaInfo = ({ alojamiento, user }) => {
-  const [fechaInicio, setFechaInicio] = useState("");
-  const [fechaFin, setFechaFin] = useState("");
-  const [huespedes, setHuespedes] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false)
-  const [message, setMessage] = useState("")
-  const navigate = useRouter();
+    const [fechaInicio, setFechaInicio] = useState("");
+    const [fechaFin, setFechaFin] = useState("");
+    const [huespedes, setHuespedes] = useState(1);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(false);
+    const [message, setMessage] = useState("");
+    const navigate = useRouter();
 
-  const diasNoDisponibles = [
-    '2025-07-24',
-    '2025-12-25',
-    '2025-12-31',
-    // … más fechas en formato YYYY-MM-DD
-  ]
+    const handleReserva = async (e) => {
+        e.preventDefault();
 
-  const handleReserva = async (e) => {
-    e.preventDefault();
+        if (!user) {
+            //   navigate.push("/auth/login");
+            return;
+        }
 
-    if (!user) {
-      //   navigate.push("/auth/login");
-      return;
-    }
+        if (!fechaInicio || !fechaFin) {
+            alert("Por favor selecciona las fechas de tu estadía");
+            return;
+        }
 
-    if (!fechaInicio || !fechaFin) {
-      alert("Por favor selecciona las fechas de tu estadía");
-      return;
-    }
+        if (huespedes > alojamiento.cantHuespedesMax) {
+            alert(
+                `Este alojamiento permite máximo ${alojamiento.cantHuespedesMax} huéspedes`
+            );
+            return;
+        }
 
-    if (huespedes > alojamiento.cantHuespedesMax) {
-      alert(
-        `Este alojamiento permite máximo ${alojamiento.cantHuespedesMax} huéspedes`
-      );
-      return;
-    }
+        setLoading(true);
 
-    setLoading(true);
-    
-    const nuevaReserva = {
-      alojamiento,
-      rangoFechaInicio: fechaInicio,
-      rangoFechaFinal:fechaFin,
-      cantHuespedes: huespedes,
-      precioTotal: calcularPrecioTotal(),
-      fechaReserva: new Date().toISOString(),
+        const nuevaReserva = {
+            alojamiento,
+            rangoFechaInicio: fechaInicio,
+            rangoFechaFinal: fechaFin,
+            cantHuespedes: huespedes,
+            precioTotal: calcularPrecioTotal(),
+            fechaReserva: new Date().toISOString(),
+        };
+
+        try {
+            const res = await axios.post("/reservas", nuevaReserva);
+            //FALTARIA MANEJO DE ERRORES
+
+            const reservaId = res.data.id;
+
+            setLoading(false);
+            alert("¡Reserva realizada con éxito!");
+            //            navigate.push(`/reservas/${reservaId}`);
+            navigate.push(`/reservas`);
+        } catch (error) {
+            console.log(error.response.data.message);
+            setMessage(error.response.data.message);
+            setError(true);
+            setLoading(false);
+        }
     };
 
-try {
-   const res = await axios.post("/reservas",
-       nuevaReserva
-    )
-     console.log(res.data)
-    //FALTARIA MANEJO DE ERRORES
+    const calcularPrecioTotal = () => {
+        if (!fechaInicio || !fechaFin) return 0;
 
-    const reservaId = res.data.id
+        const inicio = new Date(fechaInicio);
+        const fin = new Date(fechaFin);
+        const dias = Math.ceil((fin - inicio) / (1000 * 60 * 60 * 24));
 
-      setLoading(false);
-      alert("¡Reserva realizada con éxito!");
-      navigate.push(`/reservas/${reservaId}`);
+        return dias * alojamiento.precioPorNoche;
+    };
 
+    return (
+        <div className="reserva-sidebar">
+            <div className="reserva-card">
+                <div className="precio-info">
+                    <span className="precio">
+                        {formatearPrecio(
+                            alojamiento.precioPorNoche,
+                            alojamiento.moneda
+                        )}
+                    </span>
+                    <span className="por-noche">/noche</span>
+                </div>
 
-} catch (error) {
-  console.log(error.response.data.message)
-      setMessage(error.response.data.message);
-      setError(true)
-      setLoading(false)
-  
-}
-   
+                <form onSubmit={handleReserva} className="reserva-form">
+                    <div className="form-row">
+                        <div className="form-group">
+                            <SelectorFecha
+                                changeFechaInicio={setFechaInicio}
+                                changeFechafin={setFechaFin}
+                                diasNoDisponibles={alojamiento.fechasOcupadas}
+                            />
+                        </div>
+                    </div>
 
-    // Simular reserva
-    // setTimeout(() => {
-    //   const reservas = JSON.parse(localStorage.getItem("reservas") || "[]");
+                    <div className="form-group">
+                        <label>
+                            Huéspedes (máx. {alojamiento.cantHuespedesMax})
+                        </label>
+                        <select
+                            value={huespedes}
+                            onChange={(e) =>
+                                setHuespedes(Number.parseInt(e.target.value))
+                            }
+                        >
+                            {Array.from(
+                                { length: alojamiento.cantHuespedesMax },
+                                (_, i) => i + 1
+                            ).map((num) => (
+                                <option key={num} value={num}>
+                                    {num} huésped{num > 1 ? "es" : ""}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
 
-    //   reservas.push(nuevaReserva);
-    //   localStorage.setItem("reservas", JSON.stringify(reservas));
-
-    //   setLoading(false);
-    //   alert("¡Reserva realizada con éxito!");
-    //   navigate.push("/reservas");
-    // }, 1000);
-  };
-
-  const calcularPrecioTotal = () => {
-    if (!fechaInicio || !fechaFin) return 0;
-
-    const inicio = new Date(fechaInicio);
-    const fin = new Date(fechaFin);
-    const dias = Math.ceil((fin - inicio) / (1000 * 60 * 60 * 24));
-
-    return dias * alojamiento.precioPorNoche;
-  };
-
-  return (
-    <div className="reserva-sidebar">
-      <div className="reserva-card">
-        <div className="precio-info">
-          <span className="precio">
-            {formatearPrecio(alojamiento.precioPorNoche, alojamiento.moneda)}
-          </span>
-          <span className="por-noche">/noche</span>
+                    {fechaInicio && fechaFin && (
+                        <div className="precio-total">
+                            <strong>
+                                Total:{" "}
+                                {formatearPrecio(
+                                    calcularPrecioTotal(),
+                                    alojamiento.moneda
+                                )}
+                            </strong>
+                        </div>
+                    )}
+                    <div></div>
+                    {!user ? (
+                        <p className="login-notice">
+                            <a href="/auth/login">
+                                <Button
+                                    variant="filled"
+                                    color="indigo"
+                                    radius="lg"
+                                >
+                                    Inicia sesión
+                                </Button>
+                            </a>{" "}
+                            para hacer una reserva
+                        </p>
+                    ) : (
+                        <Button
+                            type="submit"
+                            variant="filled"
+                            color="indigo"
+                            radius="lg"
+                        >
+                            {loading ? "Procesando..." : "Reservar ahora"}
+                        </Button>
+                    )}
+                </form>
+            </div>
+            {error && (
+                <ErrorAlert
+                    message={message}
+                    title={"error"}
+                    onChange={setError}
+                />
+            )}
         </div>
-
-        <form onSubmit={handleReserva} className="reserva-form">
-          <div className="form-row">
-            <div className="form-group">
-
-            <SelectorFecha
-            changeFechaInicio={setFechaInicio}
-            changeFechafin={setFechaFin}
-            diasNoDisponibles={alojamiento.fechasOcupadas}
-            />
-            </div>
-          </div>
-
-          <div className="form-group">
-            <label>Huéspedes (máx. {alojamiento.cantHuespedesMax})</label>
-            <select
-              value={huespedes}
-              onChange={(e) => setHuespedes(Number.parseInt(e.target.value))}
-            >
-              {Array.from(
-                { length: alojamiento.cantHuespedesMax },
-                (_, i) => i + 1
-              ).map((num) => (
-                <option key={num} value={num}>
-                  {num} huésped{num > 1 ? "es" : ""}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {fechaInicio && fechaFin && (
-            <div className="precio-total">
-              <strong>
-                Total:{" "}
-                {formatearPrecio(calcularPrecioTotal(), alojamiento.moneda)}
-              </strong>
-            </div>
-          )}
-          <div>
-            
-          </div>
-          {!user ? (
-            <p className="login-notice">
-              <a href="/auth/login"> 
-              <Button variant="filled" color="indigo" radius="lg">
-                Inicia sesión
-                </Button>
-              </a> para hacer una reserva
-            </p>
-          ) : (
-            <Button type="submit" variant="filled" color="indigo" radius="lg">
-                {loading ? "Procesando..." : "Reservar ahora"}
-            </Button>
-          )}
-        </form>
-       
-      </div> 
-      {
-          error && (
-            <ErrorAlert message={message} title={"error"} onChange={setError} />
-          )
-        }
-    </div>
-  );
+    );
 };
 
 export default ReservaInfo;

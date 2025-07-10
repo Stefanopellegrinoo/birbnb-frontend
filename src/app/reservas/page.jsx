@@ -25,7 +25,6 @@ function MisReservas() {
     const fetchReservas = async () => {
         try {
             setLoading(true);
-            console.log(user.id)
             const res = await api.get(`/usuarios/${user.id}/reservas`);
             const reservas = res.data;
             setReservas(reservas);
