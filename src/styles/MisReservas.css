@@ -1,0 +1,161 @@
+.mis-reservas {
+  padding: 40px 20px;
+  min-height: calc(100vh - 70px);
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.mis-reservas h1 {
+  font-size: 36px;
+  margin-bottom: 8px;
+  color: #1f2937;
+}
+
+.subtitle {
+  color: #6b7280;
+  margin-bottom: 40px;
+  font-size: 16px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.empty-state p {
+  font-size: 18px;
+  color: #6b7280;
+  margin-bottom: 24px;
+}
+
+.browse-button {
+  background-color: #2563eb;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.browse-button:hover {
+  background-color: #1d4ed8;
+}
+
+.reservas-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.reserva-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: grid;
+  grid-template-columns: 200px 1fr auto;
+  gap: 24px;
+  padding: 24px;
+}
+
+.reserva-image {
+  width: 200px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.reserva-info h3 {
+  font-size: 20px;
+  margin-bottom: 16px;
+  color: #1f2937;
+}
+
+.reserva-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.detail-item {
+  display: flex;
+  gap: 8px;
+}
+
+.label {
+  font-weight: 500;
+  color: #374151;
+  min-width: 100px;
+}
+
+.detail-item span:last-child {
+  color: #6b7280;
+}
+
+.reserva-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+  min-width: 150px;
+}
+
+.precio-total {
+  text-align: right;
+  margin-bottom: 16px;
+}
+
+.total-label {
+  display: block;
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 4px;
+}
+
+.total-amount {
+  font-size: 24px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.cancel-button {
+  background-color: #dc2626;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.cancel-button:hover {
+  background-color: #b91c1c;
+}
+
+@media (max-width: 768px) {
+  .reserva-card {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .reserva-image {
+    width: 100%;
+    height: 200px;
+  }
+
+  .reserva-actions {
+    align-items: flex-start;
+  }
+
+  .precio-total {
+    text-align: left;
+  }
+}
