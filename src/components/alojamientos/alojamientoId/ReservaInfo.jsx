@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import { formatearCaracteristicas, formatearPrecio } from "@/lib/utils";
 import { useRouter } from 'next/navigation';
 import { Button } from "@mantine/core";
+import { showNotification } from '@mantine/notifications';
+import { IconCheck, IconX } from '@tabler/icons-react';
 import axios from "@/lib/api";
 import ErrorAlert from "@/components/alert/ErrorAlert";
 import SelectorFecha from "@/components/ui/SelectorFecha";
@@ -13,82 +15,81 @@ const ReservaInfo = ({ alojamiento, user }) => {
   const [fechaFin, setFechaFin] = useState("");
   const [huespedes, setHuespedes] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false)
-  const [message, setMessage] = useState("")
+  const [error, setError] = useState(false);
+  const [message, setMessage] = useState("");
   const navigate = useRouter();
-
-  const diasNoDisponibles = [
-    '2025-07-24',
-    '2025-12-25',
-    '2025-12-31',
-    // … más fechas en formato YYYY-MM-DD
-  ]
 
   const handleReserva = async (e) => {
     e.preventDefault();
 
     if (!user) {
-      //   navigate.push("/auth/login");
       return;
     }
 
     if (!fechaInicio || !fechaFin) {
-      alert("Por favor selecciona las fechas de tu estadía");
+      showNotification({
+        title: 'Fechas requeridas',
+        message: 'Por favor selecciona las fechas de tu estadía',
+        color: 'red',
+        icon: <IconX />,
+      });
       return;
     }
 
     if (huespedes > alojamiento.cantHuespedesMax) {
-      alert(
-        `Este alojamiento permite máximo ${alojamiento.cantHuespedesMax} huéspedes`
-      );
+      showNotification({
+        title: 'Demasiados huéspedes',
+        message: `Este alojamiento permite máximo ${alojamiento.cantHuespedesMax} huéspedes`,
+        color: 'red',
+        icon: <IconX />,
+      });
       return;
     }
 
     setLoading(true);
-    
+
     const nuevaReserva = {
       alojamiento,
       rangoFechaInicio: fechaInicio,
-      rangoFechaFinal:fechaFin,
+      rangoFechaFinal: fechaFin,
       cantHuespedes: huespedes,
       precioTotal: calcularPrecioTotal(),
       fechaReserva: new Date().toISOString(),
     };
 
-try {
-   const res = await axios.post("/reservas",
-       nuevaReserva
-    )
-     console.log(res.data)
-    //FALTARIA MANEJO DE ERRORES
+    try {
+      const res = await axios.post("/reservas", nuevaReserva);
+      const reservaId = res.data.id;
 
-    const reservaId = res.data.id
+      showNotification({
+        title: 'Reserva confirmada',
+        message: '¡Reserva realizada con éxito!',
+        color: 'green',
+        icon: <IconCheck />,
+      });
 
       setLoading(false);
-      alert("¡Reserva realizada con éxito!");
       navigate.push(`/reservas/${reservaId}`);
+    } catch (error) {
+      let mensajeError = "Ocurrió un error al realizar la reserva";
 
+      if (error.response?.data?.message) {
+        mensajeError = error.response.data.message;
+      } else if (error.message) {
+        mensajeError = error.message;
+      }
 
-} catch (error) {
-  console.log(error.response.data.message)
-      setMessage(error.response.data.message);
-      setError(true)
-      setLoading(false)
-  
-}
-   
+      showNotification({
+        title: 'Error al reservar',
+        message: mensajeError,
+        color: 'red',
+        icon: <IconX />,
+      });
 
-    // Simular reserva
-    // setTimeout(() => {
-    //   const reservas = JSON.parse(localStorage.getItem("reservas") || "[]");
-
-    //   reservas.push(nuevaReserva);
-    //   localStorage.setItem("reservas", JSON.stringify(reservas));
-
-    //   setLoading(false);
-    //   alert("¡Reserva realizada con éxito!");
-    //   navigate.push("/reservas");
-    // }, 1000);
+      setMessage(mensajeError);
+      setError(true);
+      setLoading(false);
+    }
   };
 
   const calcularPrecioTotal = () => {
@@ -114,12 +115,11 @@ try {
         <form onSubmit={handleReserva} className="reserva-form">
           <div className="form-row">
             <div className="form-group">
-
-            <SelectorFecha
-            changeFechaInicio={setFechaInicio}
-            changeFechafin={setFechaFin}
-            diasNoDisponibles={alojamiento.fechasOcupadas}
-            />
+              <SelectorFecha
+                changeFechaInicio={setFechaInicio}
+                changeFechafin={setFechaFin}
+                diasNoDisponibles={alojamiento.fechasOcupadas}
+              />
             </div>
           </div>
 
@@ -148,30 +148,25 @@ try {
               </strong>
             </div>
           )}
-          <div>
-            
-          </div>
+
           {!user ? (
             <p className="login-notice">
-              <a href="/auth/login"> 
-              <Button variant="filled" color="indigo" radius="lg">
-                Inicia sesión
+              <a href="/auth/login">
+                <Button variant="filled" color="indigo" radius="lg">
+                  Inicia sesión
                 </Button>
               </a> para hacer una reserva
             </p>
           ) : (
             <Button type="submit" variant="filled" color="indigo" radius="lg">
-                {loading ? "Procesando..." : "Reservar ahora"}
+              {loading ? "Procesando..." : "Reservar ahora"}
             </Button>
           )}
         </form>
-       
-      </div> 
-      {
-          error && (
-            <ErrorAlert message={message} title={"error"} onChange={setError} />
-          )
-        }
+      </div>
+      {error && (
+        <ErrorAlert message={message} title={"error"} onChange={setError} />
+      )}
     </div>
   );
 };

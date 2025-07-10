@@ -1,5 +1,7 @@
 import api from '@/lib/api'
 import React, { useEffect, useState } from 'react'
+import { showNotification } from '@mantine/notifications';
+import { IconCheck, IconX } from '@tabler/icons-react';
 
 const ReservasUser = ({reservas, user, onChange}) => {
   const [loading, setLoading] = useState(false);
@@ -23,16 +25,33 @@ const ReservasUser = ({reservas, user, onChange}) => {
   
     const cancelarReserva = async (reservaId) => {
       if (window.confirm("¿Estás seguro de que quieres cancelar esta reserva?")) {
-        try {
-          const response = await api.patch(`/reservas/${reservaId}/cancelacion`); 
-          const reservasActualizadas = reservas.filter((reserva) => reserva.id !== reservaId)
-  
-        onChange(reservasActualizadas)
-        } catch (error) {
-          console.log(error)
-        }
-      }
-    }
+      
+
+       try {
+  const response = await api.patch(`/reservas/${reservaId}/cancelacion`);
+  const reservasActualizadas = reservas.filter((reserva) => reserva.id !== reservaId);
+  onChange(reservasActualizadas);
+
+  showNotification({
+    title: "Reserva cancelada",
+    message: "Tu reserva fue cancelada correctamente.",
+    color: "green",
+    icon: <IconCheck />,
+  });
+      } catch (error) {
+  const mensaje = error.response?.data?.message || error.message || "No se pudo cancelar la reserva";
+
+  showNotification({
+    title: "Error al cancelar",
+    message: mensaje,
+    color: "red",
+    icon: <IconX />,
+  });
+
+  console.error("Error:", mensaje);
+   }
+  }
+}
 
   
     return (

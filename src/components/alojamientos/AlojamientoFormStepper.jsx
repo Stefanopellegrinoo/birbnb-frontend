@@ -23,6 +23,8 @@ import { useAuth } from "@/context/AuthContext";
 import CamposBasicos from "./alojamientoId/camposAlojamiento/CamposBasicos";
 import { useForm } from "@mantine/form";
 import Confirmacion from "./alojamientoId/camposAlojamiento/Confirmacion";
+import { showNotification } from '@mantine/notifications';
+import { IconCheck, IconX } from '@tabler/icons-react';
 
 export default function AlojamientoFormStepper() {
     const [active, setActive] = useState(0);
@@ -107,19 +109,35 @@ export default function AlojamientoFormStepper() {
         // };
 
         try {
-            const res = await api.post("/alojamientos", payload);
-            if (!res.ok) {
+  const res = await api.post("/alojamientos", payload);
+  if (!res.ok) {
                 console.log("Error al crear alojamiento:", res);
                 router.push("/alojamientos");
             }
-            const alojamientoCreado = res.data;
+  const alojamientoCreado = res.data;
 
-            console.log("Alojamiento creado:", res.datalojamientoCreado);
-            router.push("/alojamientos");
-        } catch (err) {
-            console.error("Error:", err.message);
-        }
-    };
+  showNotification({
+    title: "Alojamiento creado",
+    message: "Se creó correctamente el alojamiento.",
+    color: "green",
+    icon: <IconCheck />,
+  });
+
+  router.push("/alojamientos");
+} catch (err) {
+  const mensajeError =
+    err.response?.data?.message || err.message || "Error inesperado al crear el alojamiento";
+
+  showNotification({
+    title: "Error al crear alojamiento",
+    message: mensajeError,
+    color: "red",
+    icon: <IconX />,
+  });
+
+  console.error("Error:", mensajeError);
+}
+
 
     return (
         <Box>
@@ -195,4 +213,5 @@ export default function AlojamientoFormStepper() {
             </Card>
         </Box>
     );
+  }
 }
