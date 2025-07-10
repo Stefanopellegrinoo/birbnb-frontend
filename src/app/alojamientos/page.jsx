@@ -77,7 +77,7 @@ const handlePageChange = (page) => {
              <CardSkeleton n={6}/>
            ) : (
              alojamientos?.map((alojamiento) => (
-               <AlojamientoCard alojamiento={alojamiento} />
+               <AlojamientoCard alojamiento={alojamiento} key={alojamiento.id} />
              ))
            )}
         </div>

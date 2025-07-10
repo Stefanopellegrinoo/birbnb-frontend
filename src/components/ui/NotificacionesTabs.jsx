@@ -42,8 +42,8 @@ const NotificacionesTabs = ({sinLeer, leidas}) => {
             shadow="xs"
             withBorder
           >
-            <Group position="apart" noWrap>
-              <Group spacing="sm" noWrap>
+            <Group position="apart">
+              <Group spacing="sm">
                 <IconBell size={18} />
                 <Text size="sm">{n.mensaje}</Text>
               </Group>

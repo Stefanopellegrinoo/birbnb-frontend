@@ -66,7 +66,7 @@ export function FiltrosCompactos({
         <Button
           variant="subtle"
           size="xs"
-          leftIcon={<IconAdjustments size={16} />}
+          leftSection={<IconAdjustments size={16} />}
           onClick={() => setOpened((o) => !o)}
         >
           Filtros
@@ -75,7 +75,7 @@ export function FiltrosCompactos({
         <Group spacing={4}>
           <Button
             size="xs"
-            leftIcon={<IconSearch size={14} />}
+            leftSection={<IconSearch size={14} />}
             onClick={onSearch}
           >
             Buscar
@@ -122,7 +122,7 @@ export function FiltrosCompactos({
             />
           </Group>
 
-          <Group spacing="xs" noWrap>
+          <Group spacing="xs">
             <Text size="xs" mr={4}>
               Huéspedes
             </Text>
@@ -157,7 +157,7 @@ export function FiltrosCompactos({
             size="xs"
             variant="subtle"
             onClick={() => setShowAmenities((s) => !s)}
-            rightIcon={
+            rightSection={
               showAmenities ? <IconChevronUp size={14} /> : <IconChevronDown size={14} />
             }
           >

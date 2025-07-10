@@ -36,13 +36,29 @@ describe("template spec", () => {
         );
         cy.get("form.reserva-form").scrollIntoView().should("be.visible");
         cy.get("#date-range").should("be.visible").click();
+
+        const fechaInicio = 21;
+        const fechaFinal = 23;
+
         cy.get('[id^="mantine-"][id$="-dropdown"]')
             .should("be.visible")
             .within(() => {
-                cy.contains("button", "15").click();
-                cy.contains("button", "17").click();
+                cy.contains("button", fechaInicio.toString()).click();
+                cy.contains("button", fechaFinal.toString()).click();
             });
-        cy.get("form.reserva-form select").select("4");
-        cy.get('form.reserva-form button[type="submit"]').click()
+        cy.get("form.reserva-form select").select("5");
+        cy.get('form.reserva-form button[type="submit"]').click();
+
+        cy.location("pathname", { timeout: 10000 }).should("eq", "/reservas");
+        const mes = "julio";
+        const año = "2025";
+        const rangoFechas = `${fechaInicio} de ${mes} de ${año} - ${fechaFinal} de ${mes} de ${año}`;
+        const cantidadHuespedes = "5 personas";
+
+        cy.location("pathname", { timeout: 10000 }).should("eq", "/reservas");
+
+        // Validar que al menos una tarjeta contenga ambas cosas
+        cy.contains(".reserva-card", rangoFechas).should("exist");
+        cy.contains(".reserva-card", cantidadHuespedes).should("exist");
     });
 });
