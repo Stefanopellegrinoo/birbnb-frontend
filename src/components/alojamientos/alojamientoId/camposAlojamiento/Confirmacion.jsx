@@ -15,7 +15,7 @@ export default function Confirmacion({ formValues, ubicacion, fotos }) {
     <Stack spacing="xs">
       <Text weight={500}>Por favor verifica los datos:</Text>
       {items.map(([label, val]) => (
-        <Group key={label} noWrap>
+        <Group key={label}>
           <Text
             size="sm"
             style={{ flex: 1, textTransform: 'capitalize' }}

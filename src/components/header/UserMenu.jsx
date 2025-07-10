@@ -64,7 +64,7 @@ export default function UserMenu({ user, handleLogout }) {
             </Link>
         <Divider my="sm" />
 
-        <Menu.Item  leftSection={<IconLogout size={14} />} onClick={handleLogout} variant="outline" fullWidth>
+        <Menu.Item  leftSection={<IconLogout size={14} />} onClick={handleLogout} variant="outline">
           Cerrar Sesión
         </Menu.Item>
       </Menu.Dropdown>
