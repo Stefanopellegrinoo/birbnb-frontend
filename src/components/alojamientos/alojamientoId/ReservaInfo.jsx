@@ -47,7 +47,7 @@ const ReservaInfo = ({ alojamiento, user }) => {
             rangoFechaInicio: fechaInicio,
             rangoFechaFinal: fechaFin,
             cantHuespedes: huespedes,
-            precioTotal: calcularPrecioTotal(),
+            precioTotal: calcularPrecioTotal(fechaInicio, fechaFin, alojamiento.precioPorNoche),
             fechaReserva: new Date().toISOString(),
         };
 
@@ -121,7 +121,7 @@ const ReservaInfo = ({ alojamiento, user }) => {
                             <strong>
                                 Total:{" "}
                                 {formatearPrecio(
-                                    calcularPrecioTotal(),
+                                    calcularPrecioTotal(fechaInicio, fechaFin, alojamiento.precioPorNoche),
                                     alojamiento.moneda
                                 )}
                             </strong>

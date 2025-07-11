@@ -120,11 +120,11 @@ export function FiltrosCompactos({
               onChange={(v) => update('precioMax', v)}
               min={0}
             />
-          </Group>
+         
 
           <Group spacing="xs">
             <Text size="xs" mr={4}>
-              Huéspedes
+              Huespedes
             </Text>
             <ActionIcon
               variant="light"
@@ -151,7 +151,7 @@ export function FiltrosCompactos({
               <IconPlus size={14} /> 
             </ActionIcon>
           </Group>
-
+            </Group>
           <Divider my={4} />
           <Button
             size="xs"

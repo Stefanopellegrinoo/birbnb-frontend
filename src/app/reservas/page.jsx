@@ -103,7 +103,7 @@ function MisReservas() {
                                         <ReservasUser
                                             reservas={reservasPendientes}
                                             user={user}
-                                            onChange={handleReservasChange}
+                                            onChange={fetchReservas}
                                         />
                                     ) : (
                                         <Text mt="md">
@@ -117,7 +117,6 @@ function MisReservas() {
                                         <ReservasUser
                                             reservas={reservasAceptadas}
                                             user={user}
-                                            onChange={handleReservasChange}
                                         />
                                     ) : (
                                         <Text mt="md">
@@ -131,7 +130,6 @@ function MisReservas() {
                                         <ReservasUser
                                             reservas={reservasCanceladas}
                                             user={user}
-                                            onChange={handleReservasChange}
                                         />
                                     ) : (
                                         <Text mt="md">

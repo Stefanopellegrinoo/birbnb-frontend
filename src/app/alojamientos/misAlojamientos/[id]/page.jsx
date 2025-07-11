@@ -19,6 +19,9 @@ const page = () => {
     const [fotos, setFotos] = useState([]);
     const [reservas, setReservas] = useState([]);
     const [errorReserva, setErrorReserva] = useState(false);
+    const [loadingReserva, setLoadingReserva] = useState(false);
+    const [loadingEdit, setLoadingEdit] = useState(false);
+
 
     const form = useForm({
         initialValues: {
@@ -65,17 +68,20 @@ const page = () => {
 
 
 
-  useEffect(() => {
     const fetchReservas = async () => {
         try {
+          setLoadingReserva(true);
             const res = await api.get(`/reserva/${id}/alojamiento`);
             console.log(res.data);
             setReservas(res.data);
         } catch (err) {
           setErrorReserva(true);
           console.error("Error fetching reservas:", err);
+        }finally {
+          setLoadingReserva(false);
         }
     };
+  useEffect(() => {
     fetchReservas();
   }, [id]);
 
@@ -85,10 +91,14 @@ const page = () => {
 
     const handleSubmit = async (values) => {
         try {
+          setLoadingEdit(true)
             await api.put(`/alojamientos/${id}`, { ...values, fotos });
+
             //TODO NOTIFICACION GUARDADO
         } catch (err) {
             console.error("Error actualizando alojamiento", err);
+        }finally{
+          setLoadingEdit(false)
         }
     };
 
@@ -96,6 +106,7 @@ const page = () => {
       // if (!reservaId) return;
         try {
             await api.patch(`/reservas/${reservaId}/confirmacion`);
+            await fetchReservas();
             //TODO NOTIFICACION GUARDADO
         } catch (err) {
             console.error("Error actualizando alojamiento", err);
@@ -107,7 +118,9 @@ const page = () => {
     const handleCancelReserva = async (reservaId) => {
       if (!reservaId) return;
         try {
-            await api.put(`/alojamientos/${id}`, { ...values, fotos });
+            await api.patch(`/reservas/${reservaId}/cancelacion`);
+            await fetchReservas();
+
             //TODO NOTIFICACION GUARDADO
         } catch (err) {
             console.error("Error actualizando alojamiento", err);
@@ -116,14 +129,13 @@ const page = () => {
 
     return (
         <Center>
-          
-      <Stack spacing="xl" style={{ width: '80%' }}>
+        <Stack spacing="xl" style={{ width: '80%' }}>
+          <h2>{alojamiento.nombre}</h2>
         <Tabs
           defaultValue="reservas"
           variant="pills"      
           grow                 
           color="gray"        
-          style={{ marginTop: '2%' }} 
         >
           <Tabs.List>
             <Tabs.Tab value="reservas">Reservas</Tabs.Tab>
@@ -135,6 +147,7 @@ const page = () => {
               reservas={reservas}
               onAccept={handleAcceptReserva}
               onCancel={handleCancelReserva}
+              loading={loadingReserva}
             />
           </Tabs.Panel>
 
@@ -144,6 +157,7 @@ const page = () => {
               fotos={fotos}
               onChangeFotos={setFotos}
               submit={handleSubmit}
+              loading={loadingEdit}
             />
           </Tabs.Panel>
         </Tabs>

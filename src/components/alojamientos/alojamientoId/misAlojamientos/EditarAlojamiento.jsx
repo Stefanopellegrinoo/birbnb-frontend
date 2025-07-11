@@ -11,8 +11,14 @@ import {
 } from "@mantine/core";
 import MultipleFiles from "@/components/ui/MultipleFiles";
 import CamposBasicos from "../camposAlojamiento/CamposBasicos";
+import LoaderUI from "@/components/ui/Loader";
 
-const EditarAlojamiento = ({form, fotos, onChangeFotos, submit }) => {
+const EditarAlojamiento = ({form, fotos, onChangeFotos, submit, loading }) => {
+
+     if(loading){
+        return <LoaderUI/>
+    }
+
   return (
     <div>
       <Divider/>

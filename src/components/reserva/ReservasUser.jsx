@@ -26,7 +26,9 @@ const ReservasUser = ({ reservas, user, onChange }) => {
         ) {
             try {
                 await api.patch(`/reservas/${reservaId}/cancelacion`);
-                window.location.reload();
+                
+                await onChange();
+                // window.location.reload();
             } catch (error) {
                 console.log(error);
             }
