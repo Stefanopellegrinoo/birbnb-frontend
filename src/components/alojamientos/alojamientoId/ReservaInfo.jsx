@@ -58,9 +58,10 @@ const ReservaInfo = ({ alojamiento, user }) => {
             const reservaId = res.data.id;
 
             setLoading(false);
-            alert("¡Reserva realizada con éxito!");
-            //            navigate.push(`/reservas/${reservaId}`);
-            navigate.push(`/reservas`);
+
+             
+            navigate.push(`/reservas/confirmacion?id=${reservaId}`);
+
         } catch (error) {
             console.log(error.response.data.message);
             setMessage(error.response.data.message);
@@ -171,5 +172,5 @@ const ReservaInfo = ({ alojamiento, user }) => {
         </div>
     );
 
-
+}
 export default ReservaInfo;
