@@ -57,7 +57,6 @@ const handlePageChange = (page) => {
     setApiFilters(clean(uiFilters));
   };
 
-  if (error) return <p>Error al cargar alojamientos</p>;
 
   return (
     <div className="alojamientos">
@@ -68,6 +67,13 @@ const handlePageChange = (page) => {
         onChange={setUiFilters}
         onSearch={handleSearch}
       />
+
+
+    {error ? (
+       <p>Error al cargar alojamientos</p>
+      
+    ) :( 
+      <> 
         <p className="results-info">
           Mostrando {alojamientos?.length} de {alojamientosTotales} alojamientos
         </p>
@@ -81,7 +87,8 @@ const handlePageChange = (page) => {
              ))
            )}
         </div>
-
+        </>
+)}
         {totalPages > 1 && (
           <div className="pagination">
             <Pagination

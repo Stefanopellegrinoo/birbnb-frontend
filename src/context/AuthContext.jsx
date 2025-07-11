@@ -2,7 +2,6 @@
 
 import api from "@/lib/api";
 import { createContext, useContext, useState, useEffect } from "react";
-import { showNotification } from '@mantine/notifications';
 import { IconCheck, IconX } from '@tabler/icons-react';
 
 const AuthContext = createContext();
@@ -50,13 +49,6 @@ export function AuthProvider({ children }) {
 } catch (error) {
   const mensaje = error.response?.data?.message || "Error al iniciar sesión";
 
-  showNotification({
-    title: "Error de login",
-    message: mensaje,
-    color: "red",
-    icon: <IconX />,
-  });
-
   return false;
 }
 
@@ -79,12 +71,6 @@ export function AuthProvider({ children }) {
 } catch (error) {
   const mensaje = error.response?.data?.message || "Error al registrarse";
 
-  showNotification({
-    title: "Error de registro",
-    message: mensaje,
-    color: "red",
-    icon: <IconX />,
-  });
 
   return false;
 }

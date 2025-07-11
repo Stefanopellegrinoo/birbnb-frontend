@@ -14,7 +14,6 @@ import {
     Box,
     MultiSelect,
 } from "@mantine/core";
-import { getTimeRange, TimePicker } from "@mantine/dates";
 import SelectorUbicacion from "./SelectorUbicacion";
 import api from "@/lib/api";
 import MultipleFiles from "../ui/MultipleFiles";
@@ -23,7 +22,6 @@ import { useAuth } from "@/context/AuthContext";
 import CamposBasicos from "./alojamientoId/camposAlojamiento/CamposBasicos";
 import { useForm } from "@mantine/form";
 import Confirmacion from "./alojamientoId/camposAlojamiento/Confirmacion";
-import { showNotification } from "@mantine/notifications";
 import { IconCheck, IconX } from "@tabler/icons-react";
 
 export default function AlojamientoFormStepper() {
@@ -93,12 +91,7 @@ export default function AlojamientoFormStepper() {
             }
             const alojamientoCreado = res.data;
 
-            showNotification({
-                title: "Alojamiento creado",
-                message: "Se creó correctamente el alojamiento.",
-                color: "green",
-                icon: <IconCheck />,
-            });
+      
 
             router.push("/alojamientos");
         } catch (err) {
@@ -107,12 +100,6 @@ export default function AlojamientoFormStepper() {
                 err.message ||
                 "Error inesperado al crear el alojamiento";
 
-            showNotification({
-                title: "Error al crear alojamiento",
-                message: mensajeError,
-                color: "red",
-                icon: <IconX />,
-            });
 
             console.error("Error:", mensajeError);
         }

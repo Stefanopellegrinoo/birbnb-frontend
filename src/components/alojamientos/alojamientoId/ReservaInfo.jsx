@@ -171,5 +171,5 @@ const ReservaInfo = ({ alojamiento, user }) => {
         </div>
     );
 
-
+  }
 export default ReservaInfo;
