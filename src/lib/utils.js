@@ -42,4 +42,21 @@
     return pages
   }
 
- 
+ export const formatearFecha = (fecha) => {
+        return new Date(fecha).toLocaleDateString("es-ES", {
+            timeZone: "UTC",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+        });
+    };
+
+export const calcularPrecioTotal = (fechaInicio, fechaFin, precioPorNoche) => {
+        if (!fechaInicio || !fechaFin) return 0;
+
+        const inicio = new Date(fechaInicio);
+        const fin = new Date(fechaFin);
+        const dias = Math.ceil((fin - inicio) / (1000 * 60 * 60 * 24));
+
+        return dias * precioPorNoche;
+    };

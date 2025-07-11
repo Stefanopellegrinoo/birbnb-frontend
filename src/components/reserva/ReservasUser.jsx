@@ -2,6 +2,7 @@
 import api from "@/lib/api";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { formatearFecha } from "@/lib/utils";
 
 
 
@@ -10,14 +11,6 @@ const ReservasUser = ({ reservas, user, onChange }) => {
     const [error, setError] = useState(false);
     const [message, setMessage] = useState("");
     const router = useRouter();
-    const formatearFecha = (fecha) => {
-        return new Date(fecha).toLocaleDateString("es-ES", {
-            timeZone: "UTC",
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-        });
-    };
 
     const calcularDias = (fechaInicio, fechaFin) => {
         const inicio = new Date(fechaInicio);

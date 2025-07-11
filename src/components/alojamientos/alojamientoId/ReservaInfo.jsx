@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { formatearCaracteristicas, formatearPrecio } from "@/lib/utils";
+import { calcularPrecioTotal, formatearCaracteristicas, formatearPrecio } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { Button } from "@mantine/core";
 import { showNotification } from '@mantine/notifications';
@@ -70,15 +70,6 @@ const ReservaInfo = ({ alojamiento, user }) => {
         }
     };
 
-    const calcularPrecioTotal = () => {
-        if (!fechaInicio || !fechaFin) return 0;
-
-        const inicio = new Date(fechaInicio);
-        const fin = new Date(fechaFin);
-        const dias = Math.ceil((fin - inicio) / (1000 * 60 * 60 * 24));
-
-        return dias * alojamiento.precioPorNoche;
-    };
 
     return (
         <div className="reserva-sidebar">
