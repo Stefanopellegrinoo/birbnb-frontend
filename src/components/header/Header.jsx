@@ -1,94 +1,28 @@
 "use client";
 
 import { Box, Burger, Group, Title } from "@mantine/core";
-import { useEffect, useState, useRef } from "react";
 import { useDisclosure } from "@mantine/hooks";
 import classes from "../header/HeaderMegaMenu.module.css";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
-import axios from "@/lib/api";
-import { io } from "socket.io-client";
 import { useRouter } from "next/navigation";
 import NotificationsMenu from "./NotificationsMenu";
 import MainNav from "./MainNav";
 import UserMenu from "./UserMenu";
 import DrawerHeader from "./DrawerHeader";
-
+import { useNotifications } from "@/context/NotificationsContext";
 export default function Header() {
-    const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
-        useDisclosure(false);
+    const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
     const pathname = usePathname();
     const { user, logout } = useAuth();
-    const [notificaciones, setNotificaciones] = useState([]);
-    const [tieneNotificacionesNuevas, setTieneNotificacionesNuevas] =
-        useState(false);
     const router = useRouter();
-    const socketRef = useRef(null);
+    
 
     const handleLogout = () => {
         logout();
         router.push("/");
     };
-
-    useEffect(() => {
-        if (!user) {
-            setNotificaciones([]);
-            setTieneNotificacionesNuevas(false);
-
-            if (socketRef.current) {
-                socketRef.current.disconnect();
-                socketRef.current = null;
-            }
-
-            return;
-        }
-        const endpointNotificacionesNoLeidas = `/usuarios/${user.id}/notificaciones/`;
-        axios
-            .get(endpointNotificacionesNoLeidas)
-            .then((res) => {
-                setNotificaciones(res.data);
-                setTieneNotificacionesNuevas(res.data.length > 0);
-            })
-            .catch(() => {
-                setNotificaciones([]);
-                setTieneNotificacionesNuevas(false);
-            });
-        const socket = io(process.env.NEXT_PUBLIC_API_BASE_URL, {
-            transports: ["websocket", "polling"],
-            path: "/socket.io",
-        });
-        socketRef.current = socket;
-
-        socket.emit("join", user.id);
-
-        socket.on("nueva_notificacion", (nuevaNotificacion) => {
-            const { notificacion } = nuevaNotificacion;
-            console.log("Nueva notificación recibida:", notificacion);
-            setNotificaciones((prev) => [notificacion, ...prev]);
-            setTieneNotificacionesNuevas(true);
-        });
-
-        socket.on("cancelar_notificacion", (nuevaNotificacion) => {
-            const { notificacion } = nuevaNotificacion;
-            console.log("Nueva notificación recibida:", notificacion);
-            setNotificaciones((prev) => [notificacion, ...prev]);
-            setTieneNotificacionesNuevas(true);
-        });
-
-        socket.on("confirmar_notificacion", (nuevaNotificacion) => {
-            const { notificacion } = nuevaNotificacion;
-            console.log("Nueva notificación recibida:", notificacion);
-            setNotificaciones((prev) => [notificacion, ...prev]);
-            setTieneNotificacionesNuevas(true);
-        });
-
-        // Cleanup al desmontar o cambiar usuario
-        return () => {
-            socket.disconnect();
-            socketRef.current = null;
-        };
-    }, [user]);
 
     return (
         <Box>
@@ -106,15 +40,7 @@ export default function Header() {
 
                     <Group visibleFrom="sm">
                         {user && (
-                            <NotificationsMenu
-                                notificaciones={notificaciones}
-                                tieneNotificacionesNuevas={
-                                    tieneNotificacionesNuevas
-                                }
-                                setTieneNotificacionesNuevas={
-                                    setTieneNotificacionesNuevas
-                                }
-                            />
+                            <NotificationsMenu />
                         )}
                         <UserMenu user={user} handleLogout={handleLogout} />
                     </Group>
