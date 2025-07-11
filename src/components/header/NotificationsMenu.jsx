@@ -1,6 +1,7 @@
+import { useEffect, useState } from "react";
+import api from "@/lib/api";
 import { Menu, ActionIcon, Divider } from "@mantine/core";
 import { IconBell, IconBellFilled } from "@tabler/icons-react";
-import Link from "next/link";
 import NotificacionesTabs from "../ui/NotificacionesTabs";
 
 export default function NotificationsMenu({
@@ -8,9 +9,26 @@ export default function NotificationsMenu({
     tieneNotificacionesNuevas,
     setTieneNotificacionesNuevas,
 }) {
-    const ultimasNotificaciones = notificaciones
-        .filter((n) => !n.leida)
-        .slice(0, 5);
+    const [sinLeer, setSinLeer] = useState([]);
+    const [leidas, setLeidas] = useState([]);
+
+    useEffect(() => {
+        setSinLeer(notificaciones.filter((n) => !n.leida));
+        setLeidas(notificaciones.filter((n) => n.leida));
+    }, [notificaciones]);
+
+    const onMarkRead = async (notificacion) => {
+        try {
+            await api.patch(`/notificaciones/${notificacion._id}/marcar-leida`);
+
+            setSinLeer((prev) =>
+                prev.filter((n) => n._id !== notificacion._id)
+            );
+            setLeidas((prev) => [...prev, { ...notificacion, leida: true }]);
+        } catch (error) {
+            console.error("Error al marcar como leída:", error);
+        }
+    };
 
     return (
         <Menu
@@ -35,16 +53,12 @@ export default function NotificationsMenu({
             </Menu.Target>
             <Menu.Dropdown>
                 <Menu.Label>Notificaciones</Menu.Label>
-                <Divider/>
-                 <NotificacionesTabs
-                   sinLeer={ultimasNotificaciones}
-                   leidas={ultimasNotificaciones}
-                 />
-               
-                <Menu.Divider />
-                <Menu.Item component={Link} href="/notificaciones">
-                    Ver todas las notificaciones
-                </Menu.Item>
+                <Divider />
+                <NotificacionesTabs
+                    sinLeer={sinLeer}
+                    leidas={leidas}
+                    onMarkRead={onMarkRead}
+                />
             </Menu.Dropdown>
         </Menu>
     );

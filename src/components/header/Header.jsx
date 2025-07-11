@@ -48,8 +48,7 @@ export default function Header() {
 
             return;
         }
-        const userId = user.id;
-        const endpointNotificacionesNoLeidas = `/usuarios/${userId}/notificaciones/no-leidas`;
+        const endpointNotificacionesNoLeidas = `/usuarios/${user.id}/notificaciones/`;
         axios
             .get(endpointNotificacionesNoLeidas)
             .then((res) => {
@@ -60,7 +59,6 @@ export default function Header() {
                 setNotificaciones([]);
                 setTieneNotificacionesNuevas(false);
             });
-
         const socket = io(process.env.NEXT_PUBLIC_API_BASE_URL, {
             transports: ["websocket", "polling"],
             path: "/socket.io",
