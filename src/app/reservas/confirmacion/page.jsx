@@ -21,30 +21,24 @@ export default function ReservaConfirmada() {
   const reservaId = searchParams.get('id');
 
   const [reserva, setReserva] = useState(null);
-  const [alojamiento, setAlojamiento] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!reservaId) return;
 
-    setLoading(true);
-
-    axios
-      .get(`/reservas/${reservaId}`)
-      .then((res) => {
+    const obtenerReserva = async () => {
+      try {
+        const res = await axios.get(`/reservas/${reservaId}`);
         setReserva(res.data);
-        
-        return axios.get(`/alojamientos/${res.data.alojamiento}`);
-      })
-      .then((res) => {
-        setAlojamiento(res.data);
-      })
-      .catch((err) => {
-        console.error('Error al obtener datos:', err);
-      })
-      .finally(() => {
+        console.log("✅ Reserva obtenida:", res.data);
+      } catch (err) {
+        console.error("❌ Error al obtener reserva:", err);
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+
+    obtenerReserva();
   }, [reservaId]);
 
   if (loading) {
@@ -77,12 +71,8 @@ export default function ReservaConfirmada() {
     );
   }
 
-  const rangoFechas = reserva?.rangoFechas || {};
-  const fechaInicio = rangoFechas?.fechaInicio || '';
-  const fechaFin = rangoFechas?.fechaFin || '';
-  const cantHuespedes = reserva?.cantHuespedes || 0;
-  const precioPorNoche = reserva?.precioPorNoche || 0;
-
+  const { rangoFechas, cantHuespedes, precioPorNoche, alojamiento } = reserva;
+  const { fechaInicio, fechaFin } = rangoFechas || {};
   const dias = calcularDias(fechaInicio, fechaFin);
   const total = dias * precioPorNoche;
 
@@ -90,8 +80,7 @@ export default function ReservaConfirmada() {
     if (!inicio || !fin) return 0;
     const start = new Date(inicio);
     const end = new Date(fin);
-    const diff = end - start;
-    return Math.ceil(diff / (1000 * 60 * 60 * 24));
+    return Math.ceil((end - start) / (1000 * 60 * 60 * 24));
   }
 
   return (
@@ -106,10 +95,9 @@ export default function ReservaConfirmada() {
         </Title>
 
         <Text align="center" mt="sm" color="dimmed">
-          Has reservado en {' '}
-          <strong>{alojamiento?.nombre || reserva.alojamiento}</strong> del{' '}
-          <strong>{fechaInicio.slice(0, 10)}</strong> al{' '}
-          <strong>{fechaFin.slice(0, 10)}</strong> para{' '}
+          Has reservado en <strong>{alojamiento?.nombre || "el alojamiento"}</strong> del{' '}
+          <strong>{fechaInicio?.slice(0, 10)}</strong> al{' '}
+          <strong>{fechaFin?.slice(0, 10)}</strong> para{' '}
           <strong>{cantHuespedes}</strong> huésped{cantHuespedes > 1 ? 'es' : ''}.
         </Text>
 
@@ -118,22 +106,23 @@ export default function ReservaConfirmada() {
         </Text>
 
         <Text align="center" mt="xs" color="dimmed">
-          Total por {dias} noche(s): <strong>{total}</strong>
+          Total por {dias} noche{dias !== 1 && 's'}: <strong>{total}</strong>
         </Text>
 
-        <Group position="center" mt="xl" spacing="md">
-          <Link href="/alojamientos" passHref>
-            <Button variant="light" color="blue">
-              Ver más alojamientos
-            </Button>
-          </Link>
-
-          <Link href="/" passHref>
-            <Button color="gray" variant="outline">
-              Volver al inicio
-            </Button>
-          </Link>
-        </Group>
+        <Center mt="xl">
+          <Group spacing="md">
+            <Link href="/alojamientos" passHref>
+              <Button variant="light" color="blue">
+                Ver más alojamientos
+              </Button>
+            </Link>
+            <Link href="/" passHref>
+              <Button color="gray" variant="outline">
+                Volver al inicio
+              </Button>
+            </Link>
+          </Group>
+        </Center>
       </Paper>
     </Container>
   );
