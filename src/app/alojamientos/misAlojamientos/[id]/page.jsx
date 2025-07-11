@@ -31,67 +31,7 @@ import AlojamientoFotos from "@/components/alojamientos/alojamientoId/Alojamient
 import api from "@/lib/api";
 import CamposBasicos from "@/components/alojamientos/alojamientoId/camposAlojamiento/CamposBasicos";
 
-// function PhotosEditor({ initialPhotos = [], onChange }) {
-//   const [photos, setPhotos] = useState(initialPhotos);
 
-//   // Llama a onChange cuando photos cambian
-//   useEffect(() => {
-//     onChange(photos);
-//   }, [photos]);
-
-//   // Elimina la foto en la posición idx
-//   const removePhoto = (idx) => {
-//     setPhotos((prev) => prev.filter((_, i) => i !== idx));
-//   };
-
-//   // Agrega archivos nuevos (FileList conversion a array)
-//   const addFiles = (fileList) => {
-//     if (!fileList) return;
-//     const arr = Array.from(fileList);
-//     setPhotos((prev) => [...prev, ...arr]);
-//   };
-
-//   return (
-//     <>
-//       <SimpleGrid cols={3} spacing="sm">
-//         {photos.map((item, idx) => {
-//           const src =
-//             typeof item === 'string'
-//               ? `http://localhost:3000/images/${item}`
-//               : URL.createObjectURL(item);
-//           return (
-//             <div key={idx} style={{ position: 'relative' }}>
-//               <Image
-//                 src={src}
-//                 alt={`Foto ${idx + 1}`}
-//                 height={100}
-//                 fit="cover"
-//                 withPlaceholder
-//               />
-//               <ActionIcon
-//                 color="red"
-//                 size="sm"
-//                 variant="filled"
-//                 onClick={() => removePhoto(idx)}
-                
-//               >
-//                 <IconTrash size={16} />
-//               </ActionIcon>
-//             </div>
-//           );
-//         })}
-//       </SimpleGrid>
-
-//       <FileButton multiple accept="image/*" onChange={addFiles}>
-//         {(props) => (
-//           <Button mt="sm" {...props} fullWidth>
-//             Agregar fotos
-//           </Button>
-//         )}
-//       </FileButton>
-//     </>
-//   );
-// }
 
 
 const page = () => {
@@ -159,9 +99,6 @@ const page = () => {
   return (
     <Center py="xl">
       <Card shadow="sm" padding="lg" sx={{ width: '100%', maxWidth: 640 }}>
-        <Title order={4} mb="lg" >
-          Editor
-        </Title>
         <form onSubmit={form.onSubmit(handleSubmit)}>
           <Stack spacing="lg">
             {/* Datos básicos */}

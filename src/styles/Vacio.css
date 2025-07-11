@@ -1,0 +1,32 @@
+.mis-reservas {
+  padding: 40px 20px;
+  min-height: calc(100vh - 70px);
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+
+.browse-button {
+  background-color: #2563eb;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.browse-button:hover {
+  background-color: #1d4ed8;
+}

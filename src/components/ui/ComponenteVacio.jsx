@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import React from 'react'
+import "../../styles/Vacio.css"; 
 
 const ComponenteVacio = ({mensaje, link, button}) => {
   return (

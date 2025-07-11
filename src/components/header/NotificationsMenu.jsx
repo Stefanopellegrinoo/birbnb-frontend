@@ -42,9 +42,6 @@ export default function NotificationsMenu({
                  />
                
                 <Menu.Divider />
-                <Menu.Item component={Link} href="/notificaciones">
-                    Ver todas las notificaciones
-                </Menu.Item>
             </Menu.Dropdown>
         </Menu>
     );

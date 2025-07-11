@@ -40,15 +40,15 @@ const ReservasUser = ({ reservas, user, onChange }) => {
         }
     };
 
-
+console.log(reservas);
 
     return (
         <div className="reservas-list">
             {reservas.map((reserva) => (
                 <div key={reserva.id} className="reserva-card">
                     <img
-                        src={reserva.alojamientoImagen || "/placeholder.svg"}
-                        alt={reserva.alojamientoNombre}
+                        src={reserva.alojamiento.fotos[0]|| "/placeholder.svg"}
+                        alt={reserva.alojamiento.nombre}
                         className="reserva-image"
                     />
 

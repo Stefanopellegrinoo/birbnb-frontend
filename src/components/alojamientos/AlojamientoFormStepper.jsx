@@ -130,6 +130,7 @@ export default function AlojamientoFormStepper() {
                         <Stepper.Step label="Extras">
                             <Stack>
                                 <Divider label="Extras" />
+                                <Group></Group>
                                 <MultiSelect
                                     label="Características"
                                     data={[
