@@ -3,7 +3,6 @@ import { AuthProvider } from "@/context/AuthContext";
 import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css';
 import ClientLayout from "@/components/layout/ClientLayout";
-import '@mantine/notifications/styles.css';
 import { ColorSchemeScript, MantineProvider, mantineHtmlProps } from '@mantine/core';
 
 const geistSans = Geist({

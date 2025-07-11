@@ -49,7 +49,7 @@ const MultipleFiles = ({initialPhotos, onChange}) => {
   };
   return (
     <>
-    
+    <Stack>
       <SimpleGrid cols={3} spacing="sm" mb="md">
         {photos?.map((item, i) => {
           return (
@@ -74,26 +74,18 @@ const MultipleFiles = ({initialPhotos, onChange}) => {
         })}
       </SimpleGrid>
 
-      <Popover width={260} withArrow shadow="md">
-        <Popover.Target>
-          <Button fullWidth>Agregar fotos</Button>
-        </Popover.Target>
-
-        <Popover.Dropdown>
-          <Stack>
-
-            <Group spacing="xs">
+          <Group >
               <TextInput
                 placeholder="URL de la imagen"
                 value={urlInput}
                 onChange={(e) => setUrlInput(e.currentTarget.value)}
-                fullWidth
-              />
-              <Button onClick={addUrl}>Agregar</Button>
+                 size="lg"
+                 radius="lg"
+                />
+              <Button    variant="outline" onClick={addUrl}>Agregar</Button>
+             
             </Group>
-          </Stack>
-        </Popover.Dropdown>
-      </Popover>
+    </Stack>
     </>
   );
 }

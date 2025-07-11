@@ -8,6 +8,7 @@ import ReservasUser from "@/components/reserva/ReservasUser";
 import { useRouter } from "next/navigation";
 import { Loader, Tabs, Text } from "@mantine/core";
 import api from "@/lib/api";
+import ComponenteVacio from "@/components/ui/ComponenteVacio";
 
 function MisReservas() {
     const { user } = useAuth();
@@ -30,9 +31,9 @@ function MisReservas() {
             setReservas(reservas);
         } catch (err) {
             const mensaje =
-        err.response?.data?.message ||
-        err.message ||
-        "No se pudieron obtener las reservas";
+                err.response?.data?.message ||
+                err.message ||
+                "No se pudieron obtener las reservas";
             setError(err.message);
         } finally {
             setLoading(false);
@@ -47,7 +48,8 @@ function MisReservas() {
 
     if (loading) return <Loader />;
 
-    if (error) return <Text color="red">Error al cargar las reservas: {error}</Text>;
+    if (error)
+        return <Text color="red">Error al cargar las reservas: {error}</Text>;
 
     if (!user) return <Loader />;
 
@@ -55,61 +57,83 @@ function MisReservas() {
         setReservas(reservasActualizadas);
     };
 
-    const reservasPendientes = reservas.filter(r => r.estadoReserva === 'pendiente');
-    const reservasAceptadas = reservas.filter(r => r.estadoReserva === 'confirmada');
-    const reservasCanceladas = reservas.filter(r => r.estadoReserva === 'cancelada');
-
-    if (!loading && reservas.length === 0) {
-        return <SinReservas />;
-    }
+    const reservasPendientes = reservas.filter(
+        (r) => r.estadoReserva === "pendiente"
+    );
+    const reservasAceptadas = reservas.filter(
+        (r) => r.estadoReserva === "confirmada"
+    );
+    const reservasCanceladas = reservas.filter(
+        (r) => r.estadoReserva === "cancelada"
+    );
 
     return (
         <div className="mis-reservas">
             <div className="container">
                 <h1>Mis Reservas</h1>
-                <Tabs defaultValue="pendientes" keepMounted={false}>
-                    <Tabs.List>
-                        <Tabs.Tab value="pendientes">Pendientes ({reservasPendientes.length})</Tabs.Tab>
-                        <Tabs.Tab value="aceptadas">Aceptadas ({reservasAceptadas.length})</Tabs.Tab>
-                        <Tabs.Tab value="canceladas">Canceladas ({reservasCanceladas.length})</Tabs.Tab>
-                    </Tabs.List>
+                {reservas.length === 0 ? (
+                    <ComponenteVacio
+                        mensaje={"No tienes reservas aún"}
+                        link={"alojamientos"}
+                        button={"Explorar alojamientos"}
+                    />
+                ) : (
+                    <Tabs defaultValue="pendientes" keepMounted={false}>
+                        <Tabs.List>
+                            <Tabs.Tab value="pendientes">
+                                Pendientes ({reservasPendientes.length})
+                            </Tabs.Tab>
+                            <Tabs.Tab value="aceptadas">
+                                Aceptadas ({reservasAceptadas.length})
+                            </Tabs.Tab>
+                            <Tabs.Tab value="canceladas">
+                                Canceladas ({reservasCanceladas.length})
+                            </Tabs.Tab>
+                        </Tabs.List>
 
-                    <Tabs.Panel value="pendientes" pt="xs">
-                        {reservasPendientes.length > 0 ? (
-                            <ReservasUser
-                                reservas={reservasPendientes}
-                                user={user}
-                                onChange={handleReservasChange}
-                            />
-                        ) : (
-                            <Text mt="md">No tienes reservas pendientes.</Text>
-                        )}
-                    </Tabs.Panel>
+                        <Tabs.Panel value="pendientes" pt="xs">
+                            {reservasPendientes.length > 0 ? (
+                                <ReservasUser
+                                    reservas={reservasPendientes}
+                                    user={user}
+                                    onChange={handleReservasChange}
+                                />
+                            ) : (
+                                <Text mt="md">
+                                    No tienes reservas pendientes.
+                                </Text>
+                            )}
+                        </Tabs.Panel>
 
-                    <Tabs.Panel value="confirmadas" pt="xs">
-                        {reservasAceptadas.length > 0 ? (
-                            <ReservasUser
-                                reservas={reservasAceptadas}
-                                user={user}
-                                onChange={handleReservasChange}
-                            />
-                        ) : (
-                            <Text mt="md">No tienes reservas aceptadas.</Text>
-                        )}
-                    </Tabs.Panel>
+                        <Tabs.Panel value="confirmadas" pt="xs">
+                            {reservasAceptadas.length > 0 ? (
+                                <ReservasUser
+                                    reservas={reservasAceptadas}
+                                    user={user}
+                                    onChange={handleReservasChange}
+                                />
+                            ) : (
+                                <Text mt="md">
+                                    No tienes reservas aceptadas.
+                                </Text>
+                            )}
+                        </Tabs.Panel>
 
-                    <Tabs.Panel value="canceladas" pt="xs">
-                        {reservasCanceladas.length > 0 ? (
-                            <ReservasUser
-                                reservas={reservasCanceladas}
-                                user={user}
-                                onChange={handleReservasChange}
-                            />
-                        ) : (
-                            <Text mt="md">No tienes reservas canceladas.</Text>
-                        )}
-                    </Tabs.Panel>
-                </Tabs>
+                        <Tabs.Panel value="canceladas" pt="xs">
+                            {reservasCanceladas.length > 0 ? (
+                                <ReservasUser
+                                    reservas={reservasCanceladas}
+                                    user={user}
+                                    onChange={handleReservasChange}
+                                />
+                            ) : (
+                                <Text mt="md">
+                                    No tienes reservas canceladas.
+                                </Text>
+                            )}
+                        </Tabs.Panel>
+                    </Tabs>
+                )}
             </div>
         </div>
     );

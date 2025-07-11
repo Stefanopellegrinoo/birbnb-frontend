@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 
+
 const ReservasUser = ({ reservas, user, onChange }) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
@@ -39,15 +40,15 @@ const ReservasUser = ({ reservas, user, onChange }) => {
         }
     };
 
-
+console.log(reservas);
 
     return (
         <div className="reservas-list">
             {reservas.map((reserva) => (
                 <div key={reserva.id} className="reserva-card">
                     <img
-                        src={reserva.alojamientoImagen || "/placeholder.svg"}
-                        alt={reserva.alojamientoNombre}
+                        src={reserva.alojamiento.fotos[0]|| "/placeholder.svg"}
+                        alt={reserva.alojamiento.nombre}
                         className="reserva-image"
                     />
 

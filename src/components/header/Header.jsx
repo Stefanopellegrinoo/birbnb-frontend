@@ -1,11 +1,6 @@
 "use client";
 
-import {
-    Box,
-    Burger,
-    Group,
-    Title,
-} from "@mantine/core";
+import { Box, Burger, Group, Title } from "@mantine/core";
 import { useEffect, useState, useRef } from "react";
 import { useDisclosure } from "@mantine/hooks";
 import classes from "../header/HeaderMegaMenu.module.css";
@@ -48,8 +43,7 @@ export default function Header() {
 
             return;
         }
-        const userId = user.id;
-        const endpointNotificacionesNoLeidas = `/usuarios/${userId}/notificaciones/no-leidas`;
+        const endpointNotificacionesNoLeidas = `/usuarios/${user.id}/notificaciones/`;
         axios
             .get(endpointNotificacionesNoLeidas)
             .then((res) => {
@@ -60,7 +54,6 @@ export default function Header() {
                 setNotificaciones([]);
                 setTieneNotificacionesNuevas(false);
             });
-
         const socket = io(process.env.NEXT_PUBLIC_API_BASE_URL, {
             transports: ["websocket", "polling"],
             path: "/socket.io",
@@ -70,6 +63,20 @@ export default function Header() {
         socket.emit("join", user.id);
 
         socket.on("nueva_notificacion", (nuevaNotificacion) => {
+            const { notificacion } = nuevaNotificacion;
+            console.log("Nueva notificación recibida:", notificacion);
+            setNotificaciones((prev) => [notificacion, ...prev]);
+            setTieneNotificacionesNuevas(true);
+        });
+
+        socket.on("cancelar_notificacion", (nuevaNotificacion) => {
+            const { notificacion } = nuevaNotificacion;
+            console.log("Nueva notificación recibida:", notificacion);
+            setNotificaciones((prev) => [notificacion, ...prev]);
+            setTieneNotificacionesNuevas(true);
+        });
+
+        socket.on("confirmar_notificacion", (nuevaNotificacion) => {
             const { notificacion } = nuevaNotificacion;
             console.log("Nueva notificación recibida:", notificacion);
             setNotificaciones((prev) => [notificacion, ...prev]);
