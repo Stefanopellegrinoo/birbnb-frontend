@@ -42,8 +42,8 @@ const CamposBasicos = ({ form }) => {
           label="Check-in"
           withDropdown
           presets={getTimeRange({
-            startTime: '06:00:00',
-            endTime: '11:00:00',
+             startTime: '06:00:00',
+            endTime: '23:00:00',
             interval: '01:00:00',
           })}
           value={form.values.horarioChkIn}
@@ -54,8 +54,9 @@ const CamposBasicos = ({ form }) => {
           label="Check-out"
           withDropdown
           presets={getTimeRange({
-            startTime: '06:00:00',
-            endTime: '23:00:00',
+                  startTime: '06:00:00',
+            endTime: '11:00:00',
+     
             interval: '01:00:00',
           })}
           value={form.values.horarioChkOut}

@@ -1,11 +1,6 @@
 "use client";
 
-import {
-    Box,
-    Burger,
-    Group,
-    Title,
-} from "@mantine/core";
+import { Box, Burger, Group, Title } from "@mantine/core";
 import { useEffect, useState, useRef } from "react";
 import { useDisclosure } from "@mantine/hooks";
 import classes from "../header/HeaderMegaMenu.module.css";
@@ -68,6 +63,20 @@ export default function Header() {
         socket.emit("join", user.id);
 
         socket.on("nueva_notificacion", (nuevaNotificacion) => {
+            const { notificacion } = nuevaNotificacion;
+            console.log("Nueva notificación recibida:", notificacion);
+            setNotificaciones((prev) => [notificacion, ...prev]);
+            setTieneNotificacionesNuevas(true);
+        });
+
+        socket.on("cancelar_notificacion", (nuevaNotificacion) => {
+            const { notificacion } = nuevaNotificacion;
+            console.log("Nueva notificación recibida:", notificacion);
+            setNotificaciones((prev) => [notificacion, ...prev]);
+            setTieneNotificacionesNuevas(true);
+        });
+
+        socket.on("confirmar_notificacion", (nuevaNotificacion) => {
             const { notificacion } = nuevaNotificacion;
             console.log("Nueva notificación recibida:", notificacion);
             setNotificaciones((prev) => [notificacion, ...prev]);
