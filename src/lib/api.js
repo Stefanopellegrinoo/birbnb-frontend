@@ -4,7 +4,7 @@ import axios from "axios";
 export const URL =
   process.env.NODE_ENV === 'development'
     ? 'http://localhost:3001'
-    : process.env.NEXT_PUBLIC_API_RENDER_URL;
+    :' https://tp-cuatrimestral-jueves-manana-ju-ma-r42g.onrender.com';
 
 
 const api = axios.create({
