@@ -4,8 +4,7 @@ import axios from "axios";
 export const URL =
   process.env.NODE_ENV === 'development'
     ? 'http://localhost:3001'
-    : 'https://tp-cuatrimestral-jueves-manana-ju-ma-r42g.onrender.com';
-
+    : 'https://tp-cuatrimestral-jueves-manana-ju-ma-grupo-07-production.up.railway.app';
 
 const api = axios.create({
   baseURL: URL

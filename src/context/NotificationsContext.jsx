@@ -34,7 +34,7 @@ export function NotificationsProvider({ children }) {
                 setTieneNotificacionesNuevas(false);
             });
 
-        const socket = io(URL, {
+        const socket = io(URL.trim(), {
             transports: ["websocket", "polling"],
             path: "/socket.io",
         });
