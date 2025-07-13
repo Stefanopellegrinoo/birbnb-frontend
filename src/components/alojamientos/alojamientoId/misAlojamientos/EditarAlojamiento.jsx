@@ -67,7 +67,7 @@ const EditarAlojamiento = ({form, fotos, onChangeFotos, submit, loading }) => {
               clearable
             />
             </Group>
-            <Button type="submit" fullWidth mt="md">
+            <Button disabled={!form.isTouched()} type="submit" fullWidth mt="md">
               Guardar cambios
             </Button>
           </Stack>

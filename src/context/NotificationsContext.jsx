@@ -2,7 +2,7 @@
 import { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { io } from 'socket.io-client';
 import { useAuth } from './AuthContext';
-import api from '@/lib/api'
+import api, { URL } from '@/lib/api'
 
 const NotificationsContext = createContext(null);
 
@@ -34,7 +34,7 @@ export function NotificationsProvider({ children }) {
                 setTieneNotificacionesNuevas(false);
             });
 
-        const socket = io(process.env.NEXT_PUBLIC_API_BASE_URL, {
+        const socket = io(URL, {
             transports: ["websocket", "polling"],
             path: "/socket.io",
         });

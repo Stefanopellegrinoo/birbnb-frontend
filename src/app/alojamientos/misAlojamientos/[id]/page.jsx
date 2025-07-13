@@ -24,6 +24,7 @@ const page = () => {
 
 
     const form = useForm({
+        mode: 'uncontrolled',
         initialValues: {
             nombre: "",
             descripcion: "",
@@ -58,6 +59,7 @@ const page = () => {
             pais: alojamiento.direccion.ciudad.pais.nombre || "",
             caracteristicas: alojamiento.caracteristicas || [],
         });
+
     }, [alojamiento]);
 
     useEffect(() => {
@@ -72,7 +74,6 @@ const page = () => {
         try {
           setLoadingReserva(true);
             const res = await api.get(`/reserva/${id}/alojamiento`);
-            console.log(res.data);
             setReservas(res.data);
         } catch (err) {
           setErrorReserva(true);
@@ -93,7 +94,7 @@ const page = () => {
         try {
           setLoadingEdit(true)
             await api.put(`/alojamientos/${id}`, { ...values, fotos });
-
+form.resetTouched();
             //TODO NOTIFICACION GUARDADO
         } catch (err) {
             console.error("Error actualizando alojamiento", err);
