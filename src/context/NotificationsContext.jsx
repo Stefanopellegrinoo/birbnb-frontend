@@ -34,7 +34,7 @@ export function NotificationsProvider({ children }) {
                 setTieneNotificacionesNuevas(false);
             });
 
-        const socket = io(URL.trim(), {
+        const socket = io('wss://tp-cuatrimestral-jueves-manana-ju-ma-grupo-07-production.up.railway.app', {
             transports: ["websocket", "polling"],
             path: "/socket.io",
         });
