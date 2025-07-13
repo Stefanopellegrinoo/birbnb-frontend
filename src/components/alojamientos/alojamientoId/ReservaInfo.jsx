@@ -4,8 +4,6 @@ import React, { useState } from "react";
 import { calcularPrecioTotal, formatearCaracteristicas, formatearPrecio } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { Button } from "@mantine/core";
-import { showNotification } from '@mantine/notifications';
-import { IconCheck, IconX } from '@tabler/icons-react';
 import axios from "@/lib/api";
 import ErrorAlert from "@/components/alert/ErrorAlert";
 import SelectorFecha from "@/components/ui/SelectorFecha";
@@ -50,7 +48,7 @@ const ReservaInfo = ({ alojamiento, user }) => {
             precioTotal: calcularPrecioTotal(fechaInicio, fechaFin, alojamiento.precioPorNoche),
             fechaReserva: new Date().toISOString(),
         };
-
+            console.log("Enviando al backend:", nuevaReserva);
         try {
             const res = await axios.post("/reservas", nuevaReserva);
             //FALTARIA MANEJO DE ERRORES
