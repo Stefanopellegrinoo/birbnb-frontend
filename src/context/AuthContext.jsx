@@ -3,7 +3,6 @@
 import api from "@/lib/api";
 import { createContext, useContext, useState, useEffect } from "react";
 import { IconCheck, IconX } from "@tabler/icons-react";
-import { set } from "cypress/types/lodash";
 
 const AuthContext = createContext();
 
